@@ -373,6 +373,24 @@ const Login = () => {
 
         {/* Right Side (40% - Focus Side) - Glass Card */}
         <div className="flex-1 flex items-center justify-center p-6 lg:p-12 relative">
+          {/* Stage Light - Deep Blue Orb behind the card (top-right) */}
+          <div 
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            style={{
+              zIndex: 1,
+            }}
+          >
+            <div 
+              className="w-[1000px] h-[1000px] rounded-full"
+              style={{
+                background: 'radial-gradient(circle, rgba(30, 58, 138, 0.5) 0%, rgba(37, 99, 235, 0.4) 20%, rgba(6, 182, 212, 0.2) 40%, rgba(0, 0, 0, 0) 70%)',
+                filter: 'blur(120px)',
+                opacity: 0.4,
+                transform: 'translate(80px, -80px)',
+              }}
+            ></div>
+          </div>
+          
           {/* Atmospheric Nebula - Deep blue haze behind the card */}
           <div 
             className="absolute inset-0 flex items-center justify-center pointer-events-none"
@@ -443,23 +461,24 @@ const Login = () => {
               ref={formRef}
               className="w-full h-full rounded-[23px] relative overflow-hidden"
               style={{
-                backdropFilter: 'blur(20px)',
-                background: 'rgba(0, 0, 0, 0.2)',
+                backdropFilter: 'blur(40px)',
+                backgroundColor: 'rgba(20, 25, 35, 0.4)',
                 padding: '48px',
                 boxShadow: `
-                  inset 1px 1px 0px 0px rgba(255, 255, 255, 0.15),
-                  inset -1px -1px 0px 0px rgba(0, 0, 0, 0.3),
-                  0px 20px 40px -10px rgba(0, 0, 0, 0.6)
+                  inset 1px 1px 0px 0px rgba(255, 255, 255, 0.1),
+                  inset -1px -1px 0px 0px rgba(0, 0, 0, 0.4),
+                  0px 20px 40px -10px rgba(0, 0, 0, 0.5)
                 `,
               }}
             >
-              {/* Enhanced Noise Texture Overlay */}
+              {/* Noise Texture Overlay - Grain Effect */}
               <div 
                 className="absolute inset-0 pointer-events-none"
                 style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-                  opacity: 0.15,
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E")`,
+                  opacity: 1,
                   mixBlendMode: 'overlay',
+                  borderRadius: '23px',
                 }}
               ></div>
 
@@ -533,7 +552,7 @@ const Login = () => {
                     border: focusedField === 'username' ? '1px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.05)',
                     padding: '12px 16px 12px 40px',
                     boxShadow: focusedField === 'username' 
-                      ? '0 0 0 1px #3b82f6, 0 0 15px 0 rgba(59, 130, 246, 0.5)' 
+                      ? '0 0 0 1px #3b82f6, 0 0 15px rgba(59, 130, 246, 0.4)' 
                       : 'inset 0px 2px 4px 0px rgba(0, 0, 0, 0.5)',
                   }}
                   placeholder="Username"
@@ -567,7 +586,7 @@ const Login = () => {
                     border: focusedField === 'password' ? '1px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.05)',
                     padding: '12px 40px 12px 40px',
                     boxShadow: focusedField === 'password' 
-                      ? '0 0 0 1px #3b82f6, 0 0 15px 0 rgba(59, 130, 246, 0.5)' 
+                      ? '0 0 0 1px #3b82f6, 0 0 15px rgba(59, 130, 246, 0.4)' 
                       : 'inset 0px 2px 4px 0px rgba(0, 0, 0, 0.5)',
                   }}
                   placeholder="Password"
@@ -578,7 +597,7 @@ const Login = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
                 </button>
               </div>
 
