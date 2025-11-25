@@ -56,6 +56,7 @@ const Registration = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [typingFlash, setTypingFlash] = useState(null);
   const [progressBarGlow, setProgressBarGlow] = useState(false);
+  const [tradersCount, setTradersCount] = useState(2490);
   const navigate = useNavigate();
   const formRef = useRef(null);
   const glassCardRef = useRef(null);
@@ -63,6 +64,42 @@ const Registration = () => {
   // Load animation
   useEffect(() => {
     setIsLoaded(true);
+  }, []);
+
+  // Dynamic traders count - updates every 12 hours
+  useEffect(() => {
+    const getTradersCount = () => {
+      const STORAGE_KEY = 'tradersCount';
+      const TIMESTAMP_KEY = 'tradersCountTimestamp';
+      const TWELVE_HOURS = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
+      
+      const now = Date.now();
+      const storedTimestamp = localStorage.getItem(TIMESTAMP_KEY);
+      const storedCount = localStorage.getItem(STORAGE_KEY);
+      
+      // Check if we have a stored count and if it's been less than 12 hours
+      if (storedTimestamp && storedCount) {
+        const timeElapsed = now - parseInt(storedTimestamp);
+        
+        if (timeElapsed < TWELVE_HOURS) {
+          // Use stored count if less than 12 hours have passed
+          return parseInt(storedCount);
+        }
+      }
+      
+      // Generate new count (between 2,000 and 3,500)
+      const baseCount = 2000;
+      const randomVariation = Math.floor(Math.random() * 1500); // 0-1499
+      const newCount = baseCount + randomVariation;
+      
+      // Store new count and timestamp
+      localStorage.setItem(STORAGE_KEY, newCount.toString());
+      localStorage.setItem(TIMESTAMP_KEY, now.toString());
+      
+      return newCount;
+    };
+    
+    setTradersCount(getTradersCount());
   }, []);
 
   // OTP Resend Timer
@@ -1098,7 +1135,7 @@ const Registration = () => {
                   }}
                 >
                   <span className="text-xs xl:text-sm font-medium text-white">
-                    🟢 <span className="text-slate-300">2,490 Traders joined today</span>
+                    🟢 <span className="text-slate-300">{tradersCount.toLocaleString()} Traders joined today</span>
                   </span>
                 </div>
               </div>
@@ -1203,7 +1240,7 @@ const Registration = () => {
                 }}
               >
                 <span className="text-xs font-medium text-white">
-                  🟢 <span className="text-slate-300">2,490 Traders joined today</span>
+                  🟢 <span className="text-slate-300">{tradersCount.toLocaleString()} Traders joined today</span>
                 </span>
               </div>
             </div>

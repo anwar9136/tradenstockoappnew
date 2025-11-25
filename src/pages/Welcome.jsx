@@ -271,10 +271,10 @@ const Welcome = () => {
                         {/* Header */}
                         <div className="mb-6">
                           <div className="text-slate-400 text-xs mb-2">Portfolio Value</div>
-                          <div className="text-white text-3xl font-bold mb-1">$42,305.00</div>
-                          <div className="text-green-400 text-sm font-semibold flex items-center">
-                            <ArrowUp className="w-4 h-4 mr-1" />
-                            +$1,234.56 (+3.0%)
+                          <div className="text-white text-xl sm:text-2xl lg:text-3xl font-bold mb-1 mobile-amount">₹42,305.00</div>
+                          <div className="text-green-400 text-xs sm:text-sm font-semibold flex items-center mobile-change">
+                            <ArrowUp className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                            +₹1,234.56 (+3.0%)
                           </div>
                         </div>
 
@@ -470,6 +470,13 @@ const Welcome = () => {
           }
           .mobile-heading-spacing {
             margin-bottom: 8px !important;
+          }
+          .mobile-amount {
+            font-size: 1.25rem !important;
+            line-height: 1.2;
+          }
+          .mobile-change {
+            font-size: 0.7rem !important;
           }
         }
         @media (min-width: 1024px) {
