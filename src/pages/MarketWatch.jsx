@@ -1594,21 +1594,63 @@ const MarketWatch = () => {
                 </div>
             </div>
             
-             {/* Mobile Only: Simplified List - Symbol, Bid, Ask Only */}
-             <div className="sm:hidden mt-3 pb-0 px-4">
-              {/* Mobile Header Row */}
-              <div className="flex items-center justify-between mb-3 px-1">
-                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Symbol</div>
-                <div className="flex gap-2.5">
-                  <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center" style={{ width: '82px' }}>BID</div>
-                  <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center" style={{ width: '82px' }}>ASK</div>
+             {/* Mobile Only: Clean Professional List - Matching Reference Design */}
+             <div className="sm:hidden pb-0">
+              {/* Header Row */}
+              <div 
+                className="flex items-center justify-between"
+                style={{
+                  padding: '10px 16px',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                  background: 'rgba(15, 23, 42, 0.5)',
+                }}
+              >
+                <div 
+                  style={{
+                    fontSize: '0.75rem',
+                    color: 'rgba(148, 163, 184, 0.7)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    fontWeight: 600,
+                  }}
+                >
+                  Symbol
+                </div>
+                <div className="flex" style={{ gap: '12px' }}>
+                  <div 
+                    style={{
+                      fontSize: '0.75rem',
+                      color: 'rgba(148, 163, 184, 0.7)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.08em',
+                      fontWeight: 600,
+                      width: '90px',
+                      textAlign: 'right',
+                    }}
+                  >
+                    Bid
+                  </div>
+                  <div 
+                    style={{
+                      fontSize: '0.75rem',
+                      color: 'rgba(148, 163, 184, 0.7)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.08em',
+                      fontWeight: 600,
+                      width: '90px',
+                      textAlign: 'right',
+                    }}
+                  >
+                    Ask
+                  </div>
                 </div>
               </div>
             {filteredSymbols.map((symbol) => {
               // Check if this is a Crypto/Forex/Commodity tab (FX tabs)
               const isFXTab = ['CRYPTO', 'FOREX', 'COMMODITY'].includes(activeTab);
               
-              // SIMPLIFIED: Only calculate percentage from close price - no raw chg values
+              // Calculate change value and percentage
+              let changeValue = 0;
               let changePercent = '0.00';
               let ltpValue = 0;
               
@@ -1618,11 +1660,10 @@ const MarketWatch = () => {
                 const storedCloseUSD = parseFloat(symbol.closeUSD || 0);
                 const closeUSD = storedCloseUSD > 0 ? storedCloseUSD : (closeINR > 0 && usdToInrRate > 0 ? closeINR / usdToInrRate : 0);
                 ltpValue = ltpUSD;
+                changeValue = parseFloat(symbol.chgUSD || symbol.chg || 0);
                 
-                // Calculate percentage ONLY from close price
                 if (closeUSD > 0 && ltpUSD > 0) {
                   const pct = ((ltpUSD - closeUSD) / closeUSD) * 100;
-                  // Only show if reasonable (within ±15%)
                   if (Math.abs(pct) <= 15) {
                     changePercent = pct.toFixed(2);
                   }
@@ -1630,211 +1671,172 @@ const MarketWatch = () => {
               } else {
                 ltpValue = parseFloat(symbol.ltp || 0);
                 const closePrice = parseFloat(symbol.close || 0);
+                changeValue = parseFloat(symbol.chg || 0);
                 
-                // Calculate percentage ONLY from close price
                 if (closePrice > 0 && ltpValue > 0) {
                   const pct = ((ltpValue - closePrice) / closePrice) * 100;
-                  // Only show if reasonable (within ±15%)
                   if (Math.abs(pct) <= 15) {
                     changePercent = pct.toFixed(2);
                   }
                 }
               }
               
-              // Use the calculated percentage for color (not raw chg value)
               const isPositive = parseFloat(changePercent) >= 0;
-              const changeColor = isPositive ? 'text-emerald-400' : 'text-red-400';
               
               // Format prices based on exchange type
-              let bidDisplay, askDisplay;
+              let bidDisplay, askDisplay, lowDisplay, highDisplay;
               const symbolNameParts = symbol.SymbolName?.split('_') || [];
-              // Format symbol name with slash for crypto/forex/commodity
               const symbolDisplay = formatSymbolWithSlash(symbolNameParts[0] || 'N/A', symbol.ExchangeType || activeTab);
               
-              // Extract and format date for MCX, NSE, OPT tabs
+              // Extract and format date/time for display
               const showDate = ['MCX', 'NSE', 'OPT'].includes(activeTab);
               const datePart = showDate && symbolNameParts.length > 1 ? symbolNameParts[1] : null;
               const formattedDate = datePart ? parseAndFormatDate(datePart) : null;
+              
+              // Get current time for display (like 16:40:43)
+              const now = new Date();
+              const timeDisplay = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
               
               if (isFXTab) {
                 const exchangeType = symbol.ExchangeType || activeTab;
                 const symbolName = symbol.SymbolName || '';
                 const bidPrice = parseFloat(symbol.sellUSD || symbol.sell || 0);
                 const askPrice = parseFloat(symbol.buyUSD || symbol.buy || 0);
+                const lowPrice = parseFloat(symbol.low || 0);
+                const highPrice = parseFloat(symbol.high || 0);
                 bidDisplay = bidPrice > 0 ? formatFXPrice(bidPrice, exchangeType, symbolName) : '-';
                 askDisplay = askPrice > 0 ? formatFXPrice(askPrice, exchangeType, symbolName) : '-';
+                lowDisplay = lowPrice > 0 ? formatFXPrice(lowPrice, exchangeType, symbolName) : '-';
+                highDisplay = highPrice > 0 ? formatFXPrice(highPrice, exchangeType, symbolName) : '-';
               } else {
-                // MCX/NSE/OPTIONS: Show raw prices without rounding
                 const bidPrice = parseFloat(symbol.sell || 0);
                 const askPrice = parseFloat(symbol.buy || 0);
+                const lowPrice = parseFloat(symbol.low || 0);
+                const highPrice = parseFloat(symbol.high || 0);
                 bidDisplay = bidPrice > 0 ? bidPrice.toString() : '-';
                 askDisplay = askPrice > 0 ? askPrice.toString() : '-';
-              }
-              
-              // Format additional values
-              let ltpDisplay, chgDisplay, highDisplay, lowDisplay, openDisplay, closeDisplay, oiDisplay, volumeDisplay;
-              
-              if (isFXTab) {
-                const exchangeType = symbol.ExchangeType || activeTab;
-                const symbolName = symbol.SymbolName || '';
-                const ltpPrice = parseFloat(symbol.ltpUSD || symbol.ltp || 0);
-                const chgPrice = parseFloat(symbol.chgUSD !== undefined ? symbol.chgUSD : symbol.chg || 0);
-                const highPrice = parseFloat(symbol.high || 0);
-                const lowPrice = parseFloat(symbol.low || 0);
-                const openPrice = parseFloat(symbol.open || 0);
-                const closePrice = parseFloat(symbol.closeUSD || symbol.close || 0);
-                
-                // Validate change value - very strict validation
-                const absChg = Math.abs(chgPrice);
-                // Must have valid close price to calculate percentage properly
-                const hasValidClose = closePrice > 0 && ltpPrice > 0;
-                const isReasonableAbsolute = absChg < 50; // USD change shouldn't exceed 50
-                const isReasonablePercent = hasValidClose ? (absChg / closePrice) < 0.1 : false; // <10% change from close
-                const isReasonableChange = hasValidClose && isReasonableAbsolute && isReasonablePercent;
-                
-                ltpDisplay = ltpPrice > 0 ? formatFXPrice(ltpPrice, exchangeType, symbolName) : '-';
-                chgDisplay = (chgPrice !== 0 && isReasonableChange) ? (chgPrice > 0 ? '+' : '') + formatFXPrice(chgPrice, exchangeType, symbolName) : '-';
-                highDisplay = highPrice > 0 ? formatFXPrice(highPrice, exchangeType, symbolName) : '-';
-                lowDisplay = lowPrice > 0 ? formatFXPrice(lowPrice, exchangeType, symbolName) : '-';
-                openDisplay = openPrice > 0 ? formatFXPrice(openPrice, exchangeType, symbolName) : '-';
-                closeDisplay = closePrice > 0 ? formatFXPrice(closePrice, exchangeType, symbolName) : '-';
-              } else {
-                const ltpPrice = parseFloat(symbol.ltp || 0);
-                const chgPrice = parseFloat(symbol.chg || 0);
-                const highPrice = parseFloat(symbol.high || 0);
-                const lowPrice = parseFloat(symbol.low || 0);
-                const openPrice = parseFloat(symbol.open || 0);
-                const closePrice = parseFloat(symbol.close || 0);
-                
-                // Validate change value - very strict validation
-                const absChg = Math.abs(chgPrice);
-                // Must have valid close price to calculate percentage properly
-                const hasValidClose = closePrice > 0 && ltpPrice > 0;
-                const isReasonableAbsolute = absChg < 500; // INR change shouldn't exceed 500
-                const isReasonablePercent = hasValidClose ? (absChg / closePrice) < 0.1 : false; // <10% change from close
-                const isReasonableChange = hasValidClose && isReasonableAbsolute && isReasonablePercent;
-                
-                ltpDisplay = ltpPrice > 0 ? ltpPrice.toString() : '-';
-                chgDisplay = (chgPrice !== 0 && isReasonableChange) ? (chgPrice > 0 ? '+' : '') + chgPrice.toString() : '-';
-                highDisplay = highPrice > 0 ? highPrice.toString() : '-';
                 lowDisplay = lowPrice > 0 ? lowPrice.toString() : '-';
-                openDisplay = openPrice > 0 ? openPrice.toString() : '-';
-                closeDisplay = closePrice > 0 ? closePrice.toString() : '-';
+                highDisplay = highPrice > 0 ? highPrice.toString() : '-';
               }
               
-              const oiValue = parseFloat(symbol.oi || 0);
-              const volumeValue = parseFloat(symbol.volume || 0);
-              oiDisplay = oiValue > 0 ? oiValue.toLocaleString() : '-';
-              volumeDisplay = volumeValue > 0 ? volumeValue.toLocaleString() : '-';
-              
-              // Determine color for CHG based on positive/negative - Premium Emerald/Rose
-              const chgColor = parseFloat(changePercent) >= 0 
-                ? 'linear-gradient(to bottom right, #059669, #10B981)' 
-                : 'linear-gradient(to bottom right, #DC2626, #EF4444)';
-
-              // Clean single-line layout like the reference image
-              const isPositiveChange = parseFloat(changePercent) >= 0;
-              const priceChangeColor = isPositiveChange ? '#22C55E' : '#EF4444';
+              // Format change display with sign
+              const changeDisplay = changeValue !== 0 
+                ? (changeValue > 0 ? '+' : '') + Math.abs(changeValue).toFixed(0)
+                : '0';
               
               return (
                 <div
                   key={symbol.SymbolToken}
-                  className="flex items-center justify-between py-4 border-b cursor-pointer touch-manipulation transition-all duration-200 active:bg-slate-800/30"
+                  className="cursor-pointer touch-manipulation transition-all duration-150 active:bg-white/5"
                   onClick={() => handleSymbolClick(symbol)}
                   style={{
-                    borderColor: 'rgba(148, 163, 184, 0.1)',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+                    padding: '12px 16px',
                   }}
                 >
-                   {/* Left: Symbol info */}
-                   <div className="flex-1 min-w-0 mr-3">
-                     {/* Row 1: Symbol name and date */}
-                     <div className="flex items-center gap-2 mb-0.5">
-                       <span 
-                         className="font-bold text-white"
-                         style={{
-                           fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-                           fontSize: symbolDisplay.length > 18 ? '0.75rem' : symbolDisplay.length > 12 ? '0.85rem' : '0.95rem',
-                         }}
-                       >
-                         {symbolDisplay}
-                       </span>
-                       {formattedDate && (
-                         <span 
-                           className="px-2 py-0.5 rounded-full flex-shrink-0"
-                           style={{
-                             background: '#1A3C6B',
-                             color: '#FFFFFF',
-                             fontWeight: 600,
-                             fontSize: '0.65rem',
-                             boxShadow: 'inset 0 1px 2px rgba(0, 0, 0, 0.4)',
-                             whiteSpace: 'nowrap',
-                           }}
-                         >
-                           {formattedDate}
-                         </span>
-                       )}
-                     </div>
-                     {/* Row 2: Exchange and Lot */}
-                     <div className="flex items-center gap-2 text-xs text-slate-400">
-                       <span>{symbol.ExchangeType || activeTab}</span>
-                       <span className="text-slate-500">Lot: {symbol.Lotsize || 1}</span>
-                     </div>
-                   </div>
-                   
-                   {/* Right: BID and ASK Buttons - Soft Glass Pill Style */}
-                   <div className="flex gap-2 flex-shrink-0">
-                     {/* BID Button - Red Soft Glass */}
-                     <button
-                       className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden"
-                       style={{
-                         background: 'linear-gradient(180deg, #C53030 0%, #9B2C2C 100%)',
-                         boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.2)',
-                         color: 'white',
-                         width: '75px',
-                         height: '36px',
-                       }}
-                       onClick={(e) => {
-                         e.stopPropagation();
-                         handleSymbolClick(symbol);
-                       }}
-                     >
-                       <span 
-                         className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-1"
-                         style={{
-                           fontSize: bidDisplay && bidDisplay.length > 6 ? '0.65rem' : '0.8rem',
-                           fontVariantNumeric: 'tabular-nums',
-                         }}
-                       >
-                         {bidDisplay}
-                       </span>
-                     </button>
-                     
-                     {/* ASK Button - Green Soft Glass */}
-                     <button
-                       className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden"
-                       style={{
-                         background: 'linear-gradient(180deg, #38A169 0%, #276749 100%)',
-                         boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.2)',
-                         color: 'white',
-                         width: '75px',
-                         height: '36px',
-                       }}
-                       onClick={(e) => {
-                         e.stopPropagation();
-                         handleSymbolClick(symbol);
-                       }}
-                     >
-                       <span 
-                         className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-1"
-                         style={{
-                           fontSize: askDisplay && askDisplay.length > 6 ? '0.65rem' : '0.8rem',
-                           fontVariantNumeric: 'tabular-nums',
-                         }}
-                       >
-                         {askDisplay}
-                       </span>
-                     </button>
-                   </div>
+                  <div className="flex items-center justify-between">
+                    {/* Left Section: Symbol, Exchange, Lot, Date */}
+                    <div className="flex-1 min-w-0 pr-4">
+                      {/* Symbol Name with Date */}
+                      <div className="flex items-center gap-2">
+                        <span 
+                          className="font-semibold text-white truncate"
+                          style={{
+                            fontSize: '1rem',
+                            letterSpacing: '-0.01em',
+                            lineHeight: 1.3,
+                          }}
+                        >
+                          {symbolDisplay}
+                        </span>
+                        {formattedDate && (
+                          <span 
+                            style={{
+                              fontSize: '0.65rem',
+                              color: 'rgba(148, 163, 184, 0.8)',
+                              background: 'rgba(59, 130, 246, 0.15)',
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              fontWeight: 500,
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
+                            {formattedDate}
+                          </span>
+                        )}
+                      </div>
+                      
+                      {/* Exchange and Lot Info */}
+                      <div 
+                        className="flex items-center gap-2 mt-0.5"
+                        style={{
+                          fontSize: '0.7rem',
+                          color: 'rgba(148, 163, 184, 0.7)',
+                        }}
+                      >
+                        <span>{symbol.ExchangeType || activeTab}</span>
+                        <span style={{ color: 'rgba(148, 163, 184, 0.4)' }}>•</span>
+                        <span>Lot: {symbol.Lotsize || 1}</span>
+                      </div>
+                    </div>
+                    
+                    {/* Right Section: Two Price Columns - Fixed Width for Consistency */}
+                    <div className="flex flex-shrink-0" style={{ gap: '12px' }}>
+                      {/* BID Column */}
+                      <div style={{ width: '90px', textAlign: 'right' }}>
+                        <div 
+                          className="font-bold"
+                          style={{
+                            color: '#EF4444',
+                            fontSize: '1.1rem',
+                            fontVariantNumeric: 'tabular-nums',
+                            fontFamily: "'SF Mono', 'Consolas', 'Monaco', monospace",
+                            letterSpacing: '-0.02em',
+                            lineHeight: 1.2,
+                          }}
+                        >
+                          {bidDisplay}
+                        </div>
+                        <div 
+                          style={{
+                            fontSize: '0.65rem',
+                            color: 'rgba(148, 163, 184, 0.6)',
+                            marginTop: '3px',
+                            fontVariantNumeric: 'tabular-nums',
+                          }}
+                        >
+                          L: {lowDisplay}
+                        </div>
+                      </div>
+                      
+                      {/* ASK Column */}
+                      <div style={{ width: '90px', textAlign: 'right' }}>
+                        <div 
+                          className="font-bold"
+                          style={{
+                            color: '#3B82F6',
+                            fontSize: '1.1rem',
+                            fontVariantNumeric: 'tabular-nums',
+                            fontFamily: "'SF Mono', 'Consolas', 'Monaco', monospace",
+                            letterSpacing: '-0.02em',
+                            lineHeight: 1.2,
+                          }}
+                        >
+                          {askDisplay}
+                        </div>
+                        <div 
+                          style={{
+                            fontSize: '0.65rem',
+                            color: 'rgba(148, 163, 184, 0.6)',
+                            marginTop: '3px',
+                            fontVariantNumeric: 'tabular-nums',
+                          }}
+                        >
+                          H: {highDisplay}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               );
             })}
