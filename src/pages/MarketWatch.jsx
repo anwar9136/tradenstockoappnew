@@ -1761,12 +1761,12 @@ const MarketWatch = () => {
                          </div>
                          {formattedDate && (
                            <span 
-                             className="px-1.5 py-0.5 rounded-full flex-shrink-0"
+                             className="px-2 py-0.5 rounded-full flex-shrink-0"
                              style={{
                                background: '#1A3C6B',
                                color: '#FFFFFF',
-                               fontWeight: 500,
-                               fontSize: '0.6rem',
+                               fontWeight: 600,
+                               fontSize: '0.7rem',
                                boxShadow: 'inset 0 1px 2px rgba(0, 0, 0, 0.4)',
                                whiteSpace: 'nowrap',
                              }}
@@ -1775,11 +1775,9 @@ const MarketWatch = () => {
                            </span>
                          )}
                        </div>
-                       <div className="text-xs text-slate-400">
-                         {symbol.ExchangeType || activeTab}
-                       </div>
-                       <div className="text-xs text-slate-500">
-                         Lot: {symbol.Lotsize || 1}
+                       <div className="flex items-center gap-2 text-xs text-slate-400">
+                         <span>{symbol.ExchangeType || activeTab}</span>
+                         <span className="text-slate-500">Lot: {symbol.Lotsize || 1}</span>
                        </div>
                      </div>
                    </div>
