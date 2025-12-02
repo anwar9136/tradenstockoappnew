@@ -1295,16 +1295,16 @@ const MarketWatch = () => {
                         </span>
                       </div>
                       
-                      {/* BID and ASK Pill Buttons */}
+                      {/* BID and ASK Glass Pill Buttons */}
                       <div className="flex gap-2 flex-shrink-0">
-                        {/* BID - Red Pill */}
+                        {/* BID - Red Glass */}
                         <button
-                          className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden"
+                          className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden relative"
                           style={{
-                            background: 'linear-gradient(180deg, #DC2626 0%, #991B1B 100%)',
-                            boxShadow: '0 4px 12px rgba(220, 38, 38, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+                            background: 'linear-gradient(160deg, #D32F2F 0%, #B71C1C 35%, #7F0000 100%)',
+                            boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.25), inset 0 -2px 6px rgba(0,0,0,0.4), 0 2px 8px rgba(127,0,0,0.5)',
                             color: 'white',
-                            width: '85px',
+                            width: '82px',
                             height: '38px',
                           }}
                           onClick={(e) => {
@@ -1313,25 +1313,26 @@ const MarketWatch = () => {
                           }}
                         >
                           <span 
-                            className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2"
+                            className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2 relative z-10"
                             style={{
                               fontSize: bidDisplay && bidDisplay.length > 6 ? '0.7rem' : '0.85rem',
                               fontVariantNumeric: 'tabular-nums',
                               fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
+                              textShadow: '0 1px 2px rgba(0,0,0,0.5)',
                             }}
                           >
                             {bidDisplay}
                           </span>
                         </button>
                         
-                        {/* ASK - Green Pill */}
+                        {/* ASK - Green Glass */}
                         <button
-                          className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden"
+                          className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden relative"
                           style={{
-                            background: 'linear-gradient(180deg, #22C55E 0%, #15803D 100%)',
-                            boxShadow: '0 4px 12px rgba(34, 197, 94, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+                            background: 'linear-gradient(160deg, #43A047 0%, #2E7D32 35%, #1B5E20 100%)',
+                            boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.25), inset 0 -2px 6px rgba(0,0,0,0.4), 0 2px 8px rgba(27,94,32,0.5)',
                             color: 'white',
-                            width: '85px',
+                            width: '82px',
                             height: '38px',
                           }}
                           onClick={(e) => {
@@ -1340,11 +1341,12 @@ const MarketWatch = () => {
                           }}
                         >
                           <span 
-                            className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2"
+                            className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2 relative z-10"
                             style={{
                               fontSize: askDisplay && askDisplay.length > 6 ? '0.7rem' : '0.85rem',
                               fontVariantNumeric: 'tabular-nums',
                               fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
+                              textShadow: '0 1px 2px rgba(0,0,0,0.5)',
                             }}
                           >
                             {askDisplay}
@@ -1411,13 +1413,13 @@ const MarketWatch = () => {
                     </div>
                   </div>
                   
-                    {/* BID Column - Red Pill Button */}
+                    {/* BID Column - Red Glass Pill Button */}
                   <div className="text-center flex items-center justify-center relative z-10">
                       <button
-                        className="rounded-full font-bold transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center overflow-hidden cursor-pointer"
+                        className="rounded-full font-bold transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center overflow-hidden cursor-pointer relative"
                         style={{
-                          background: 'linear-gradient(180deg, #DC2626 0%, #991B1B 100%)',
-                          boxShadow: '0 4px 12px rgba(220, 38, 38, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+                          background: 'linear-gradient(160deg, #D32F2F 0%, #B71C1C 35%, #7F0000 100%)',
+                          boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.25), inset 0 -2px 6px rgba(0,0,0,0.4), 0 2px 8px rgba(127,0,0,0.5)',
                           color: 'white',
                           width: '115px',
                           height: '44px',
@@ -1428,11 +1430,12 @@ const MarketWatch = () => {
                         }}
                       >
                         <span 
-                          className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2"
+                          className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2 relative z-10"
                           style={{
                             fontSize: bidDisplay && bidDisplay.length > 6 ? '0.85rem' : '1rem',
                             fontVariantNumeric: 'tabular-nums',
                             fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
+                            textShadow: '0 1px 2px rgba(0,0,0,0.5)',
                           }}
                         >
                           {bidDisplay}
@@ -1440,13 +1443,13 @@ const MarketWatch = () => {
                       </button>
                   </div>
                   
-                    {/* ASK Column - Green Pill Button */}
+                    {/* ASK Column - Green Glass Pill Button */}
                   <div className="text-center flex items-center justify-center relative z-10">
                       <button
-                        className="rounded-full font-bold transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center overflow-hidden cursor-pointer"
+                        className="rounded-full font-bold transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center overflow-hidden cursor-pointer relative"
                         style={{
-                          background: 'linear-gradient(180deg, #22C55E 0%, #15803D 100%)',
-                          boxShadow: '0 4px 12px rgba(34, 197, 94, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+                          background: 'linear-gradient(160deg, #43A047 0%, #2E7D32 35%, #1B5E20 100%)',
+                          boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.25), inset 0 -2px 6px rgba(0,0,0,0.4), 0 2px 8px rgba(27,94,32,0.5)',
                           color: 'white',
                           width: '115px',
                           height: '44px',
@@ -1457,11 +1460,12 @@ const MarketWatch = () => {
                         }}
                       >
                         <span 
-                          className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2"
+                          className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2 relative z-10"
                           style={{
                             fontSize: askDisplay && askDisplay.length > 6 ? '0.85rem' : '1rem',
                             fontVariantNumeric: 'tabular-nums',
                             fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
+                            textShadow: '0 1px 2px rgba(0,0,0,0.5)',
                           }}
                         >
                           {askDisplay}
@@ -1791,14 +1795,14 @@ const MarketWatch = () => {
                      </div>
                    </div>
                    
-                   {/* Right: BID and ASK Buttons with prices inside - Pill Style */}
+                   {/* Right: BID and ASK Buttons with prices inside - Glass Pill Style */}
                    <div className="flex gap-2.5 flex-shrink-0 ml-auto">
-                     {/* BID Button - Red (Left) */}
+                     {/* BID Button - Red Glass */}
                      <button
-                       className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden"
+                       className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden relative"
                        style={{
-                         background: 'linear-gradient(180deg, #DC2626 0%, #991B1B 100%)',
-                         boxShadow: '0 3px 10px rgba(220, 38, 38, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+                         background: 'linear-gradient(160deg, #D32F2F 0%, #B71C1C 35%, #7F0000 100%)',
+                         boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.25), inset 0 -2px 6px rgba(0,0,0,0.4), 0 2px 8px rgba(127,0,0,0.5)',
                          color: 'white',
                          width: '82px',
                          height: '38px',
@@ -1809,22 +1813,23 @@ const MarketWatch = () => {
                        }}
                      >
                        <span 
-                         className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-1.5"
+                         className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-1.5 relative z-10"
                          style={{
                            fontSize: bidDisplay && bidDisplay.length > 6 ? '0.7rem' : '0.85rem',
                            fontVariantNumeric: 'tabular-nums',
+                           textShadow: '0 1px 2px rgba(0,0,0,0.5)',
                          }}
                        >
                          {bidDisplay}
                        </span>
                      </button>
                      
-                     {/* ASK Button - Green (Right) */}
+                     {/* ASK Button - Green Glass */}
                      <button
-                       className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden"
+                       className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden relative"
                        style={{
-                         background: 'linear-gradient(180deg, #22C55E 0%, #15803D 100%)',
-                         boxShadow: '0 3px 10px rgba(34, 197, 94, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+                         background: 'linear-gradient(160deg, #43A047 0%, #2E7D32 35%, #1B5E20 100%)',
+                         boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.25), inset 0 -2px 6px rgba(0,0,0,0.4), 0 2px 8px rgba(27,94,32,0.5)',
                          color: 'white',
                          width: '82px',
                          height: '38px',
@@ -1835,10 +1840,11 @@ const MarketWatch = () => {
                        }}
                      >
                        <span 
-                         className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-1.5"
+                         className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-1.5 relative z-10"
                          style={{
                            fontSize: askDisplay && askDisplay.length > 6 ? '0.7rem' : '0.85rem',
                            fontVariantNumeric: 'tabular-nums',
+                           textShadow: '0 1px 2px rgba(0,0,0,0.5)',
                          }}
                        >
                          {askDisplay}
