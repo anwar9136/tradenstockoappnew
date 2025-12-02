@@ -1746,44 +1746,43 @@ const MarketWatch = () => {
                   }}
                 >
                    {/* Left: Symbol info */}
-                   <div className="flex items-center flex-1 min-w-0 mr-2">
-                     <div className="flex-1 min-w-0">
-                       <div className="flex flex-wrap items-center gap-1.5">
-                         <div 
-                           className="font-bold text-white"
+                   <div className="flex-1 min-w-0 mr-3">
+                     {/* Row 1: Symbol name and date */}
+                     <div className="flex items-center gap-2 mb-0.5">
+                       <span 
+                         className="font-bold text-white"
+                         style={{
+                           fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+                           fontSize: symbolDisplay.length > 18 ? '0.75rem' : symbolDisplay.length > 12 ? '0.85rem' : '0.95rem',
+                         }}
+                       >
+                         {symbolDisplay}
+                       </span>
+                       {formattedDate && (
+                         <span 
+                           className="px-2 py-0.5 rounded-full flex-shrink-0"
                            style={{
-                             fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-                             fontSize: symbolDisplay.length > 15 ? '0.8rem' : symbolDisplay.length > 10 ? '0.9rem' : '1rem',
-                             wordBreak: 'break-word',
+                             background: '#1A3C6B',
+                             color: '#FFFFFF',
+                             fontWeight: 600,
+                             fontSize: '0.65rem',
+                             boxShadow: 'inset 0 1px 2px rgba(0, 0, 0, 0.4)',
+                             whiteSpace: 'nowrap',
                            }}
                          >
-                           {symbolDisplay}
-                         </div>
-                         {formattedDate && (
-                           <span 
-                             className="px-2 py-0.5 rounded-full flex-shrink-0"
-                             style={{
-                               background: '#1A3C6B',
-                               color: '#FFFFFF',
-                               fontWeight: 600,
-                               fontSize: '0.7rem',
-                               boxShadow: 'inset 0 1px 2px rgba(0, 0, 0, 0.4)',
-                               whiteSpace: 'nowrap',
-                             }}
-                           >
-                             {formattedDate}
-                           </span>
-                         )}
-                       </div>
-                       <div className="flex items-center gap-2 text-xs text-slate-400">
-                         <span>{symbol.ExchangeType || activeTab}</span>
-                         <span className="text-slate-500">Lot: {symbol.Lotsize || 1}</span>
-                       </div>
+                           {formattedDate}
+                         </span>
+                       )}
+                     </div>
+                     {/* Row 2: Exchange and Lot */}
+                     <div className="flex items-center gap-2 text-xs text-slate-400">
+                       <span>{symbol.ExchangeType || activeTab}</span>
+                       <span className="text-slate-500">Lot: {symbol.Lotsize || 1}</span>
                      </div>
                    </div>
                    
                    {/* Right: BID and ASK Buttons - Soft Glass Pill Style */}
-                   <div className="flex gap-2.5 flex-shrink-0 ml-auto">
+                   <div className="flex gap-2 flex-shrink-0">
                      {/* BID Button - Red Soft Glass */}
                      <button
                        className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden"
@@ -1791,8 +1790,8 @@ const MarketWatch = () => {
                          background: 'linear-gradient(180deg, #C53030 0%, #9B2C2C 100%)',
                          boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.2)',
                          color: 'white',
-                         width: '82px',
-                         height: '38px',
+                         width: '75px',
+                         height: '36px',
                        }}
                        onClick={(e) => {
                          e.stopPropagation();
@@ -1800,9 +1799,9 @@ const MarketWatch = () => {
                        }}
                      >
                        <span 
-                         className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-1.5"
+                         className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-1"
                          style={{
-                           fontSize: bidDisplay && bidDisplay.length > 6 ? '0.7rem' : '0.85rem',
+                           fontSize: bidDisplay && bidDisplay.length > 6 ? '0.65rem' : '0.8rem',
                            fontVariantNumeric: 'tabular-nums',
                          }}
                        >
@@ -1817,8 +1816,8 @@ const MarketWatch = () => {
                          background: 'linear-gradient(180deg, #38A169 0%, #276749 100%)',
                          boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.2)',
                          color: 'white',
-                         width: '82px',
-                         height: '38px',
+                         width: '75px',
+                         height: '36px',
                        }}
                        onClick={(e) => {
                          e.stopPropagation();
@@ -1826,9 +1825,9 @@ const MarketWatch = () => {
                        }}
                      >
                        <span 
-                         className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-1.5"
+                         className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-1"
                          style={{
-                           fontSize: askDisplay && askDisplay.length > 6 ? '0.7rem' : '0.85rem',
+                           fontSize: askDisplay && askDisplay.length > 6 ? '0.65rem' : '0.8rem',
                            fontVariantNumeric: 'tabular-nums',
                          }}
                        >
