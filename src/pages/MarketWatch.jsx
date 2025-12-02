@@ -1745,23 +1745,16 @@ const MarketWatch = () => {
                     borderColor: 'rgba(148, 163, 184, 0.1)',
                   }}
                 >
-                   {/* Left: Symbol with icon and info */}
-                   <div className="flex items-center gap-3 flex-1 min-w-0">
-                     <div 
-                       className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
-                       style={{
-                         background: 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)',
-                         color: 'white',
-                       }}
-                     >
-                       {symbolDisplay.charAt(0)}
-                     </div>
+                   {/* Left: Symbol info */}
+                   <div className="flex items-center flex-1 min-w-0 mr-2">
                      <div className="flex-1 min-w-0">
-                       <div className="flex items-center gap-1.5">
+                       <div className="flex flex-wrap items-center gap-1.5">
                          <div 
-                           className="text-base font-bold text-white truncate flex-shrink"
+                           className="font-bold text-white"
                            style={{
                              fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+                             fontSize: symbolDisplay.length > 15 ? '0.8rem' : symbolDisplay.length > 10 ? '0.9rem' : '1rem',
+                             wordBreak: 'break-word',
                            }}
                          >
                            {symbolDisplay}
