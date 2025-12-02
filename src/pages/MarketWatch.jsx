@@ -311,8 +311,8 @@ const MarketWatch = () => {
                 volume: totalBidVolume + totalAskVolume,
                 prevBuy: token.buy || bestAskPrice,
                 prevSell: token.sell || bestBidPrice,
-                prevLtp: prevLtp,
-                prevLtpUSD: prevLtpUSD,
+                prevLtp: token.ltp || ltp,
+                prevLtpUSD: token.ltpUSD || ltpUSD,
                 lastUpdate: Date.now()
               };
             }
@@ -402,6 +402,8 @@ const MarketWatch = () => {
           closeUSD = close / usdToInrRate;
         }
         
+        // IMPORTANT: Initialize chg to 0 to prevent large values on initial load
+        // The display will calculate percentage from close price
         return {
           SymbolToken: token.SymbolToken?.toString(),
           SymbolName: token.SymbolName,
@@ -411,8 +413,8 @@ const MarketWatch = () => {
           sell: parseFloat(token.sell || 0),
           ltp: ltp,
           ltpUSD: ltpUSD,
-          chg: parseFloat(token.chg || 0),
-          chgUSD: parseFloat(token.chgUSD || 0),
+          chg: 0, // ALWAYS 0 - percentage is calculated in display from close price
+          chgUSD: 0, // ALWAYS 0 - percentage is calculated in display from close price
           high: parseFloat(token.high || 0),
           low: parseFloat(token.low || 0),
           open: parseFloat(token.opn || token.open || 0),
@@ -1093,8 +1095,8 @@ const MarketWatch = () => {
                     textRendering: 'optimizeLegibility',
                   }}>
                     <div className="text-left">SYMBOLS</div>
-                    <div className="text-center">ASK</div>
                     <div className="text-center">BID</div>
+                    <div className="text-center">ASK</div>
                     <div className="text-center">LTP</div>
                     <div className="text-center">CHG</div>
                     <div className="text-center">HIGH</div>
@@ -1111,74 +1113,41 @@ const MarketWatch = () => {
               // Check if this is a Crypto/Forex/Commodity tab (FX tabs)
               const isFXTab = ['CRYPTO', 'FOREX', 'COMMODITY'].includes(activeTab);
               
-              let changeValue, ltpValue, prevLtpValue, changePercent;
+              // SIMPLIFIED: Only calculate percentage from close price - no raw chg values
+              let changePercent = '0.00';
+              let ltpValue = 0;
               
               if (isFXTab) {
-                // For FX symbols, use USD prices for percentage calculation
                 const ltpUSD = parseFloat(symbol.ltpUSD || 0);
-                // Get close price in USD (convert from INR close if needed, or use stored closeUSD)
                 const closeINR = parseFloat(symbol.close || 0);
                 const storedCloseUSD = parseFloat(symbol.closeUSD || 0);
                 const closeUSD = storedCloseUSD > 0 ? storedCloseUSD : (closeINR > 0 && usdToInrRate > 0 ? closeINR / usdToInrRate : 0);
-                
-                // For display: show intraday change (from previous tick) - this is what chgUSD represents
-                const prevLtpUSD = parseFloat(symbol.prevLtpUSD || 0);
-                // Use chgUSD if available (intraday change), otherwise calculate from prevLtp
-                const chgUSDValue = parseFloat(symbol.chgUSD !== undefined ? symbol.chgUSD : 0);
-                changeValue = chgUSDValue !== 0 ? chgUSDValue : (prevLtpUSD > 0 ? (ltpUSD - prevLtpUSD) : 0);
-                
                 ltpValue = ltpUSD;
-                prevLtpValue = prevLtpUSD || ltpUSD;
                 
-                // For percentage: ALWAYS use close price as base (standard trading calculation)
-                // Percentage = ((Current Price - Close Price) / Close Price) * 100
+                // Calculate percentage ONLY from close price
                 if (closeUSD > 0 && ltpUSD > 0) {
-                  // Calculate change from close for percentage calculation
-                  const changeFromCloseUSD = ltpUSD - closeUSD;
-                  const calculatedPercent = ((changeFromCloseUSD / closeUSD) * 100);
-                  // Validate percentage - if unreasonably large (>50%), show 0.00
-                  changePercent = (Math.abs(calculatedPercent) <= 50) ? calculatedPercent.toFixed(2) : '0.00';
-                } else {
-                  // If close price not available, cannot calculate accurate percentage
-                  changePercent = '0.00';
+                  const pct = ((ltpUSD - closeUSD) / closeUSD) * 100;
+                  // Only show if reasonable (within ±15%)
+                  if (Math.abs(pct) <= 15) {
+                    changePercent = pct.toFixed(2);
+                  }
                 }
               } else {
-                // For MCX/NSE/OPT, use INR prices
                 ltpValue = parseFloat(symbol.ltp || 0);
                 const closePrice = parseFloat(symbol.close || 0);
-                const prevLtp = parseFloat(symbol.prevLtp || 0);
                 
-                // For display: use chg from WebSocket (this is change from close for MCX/NSE)
-                // If chg is 0 or not available, calculate from prevLtp for intraday change display
-                const chgFromWS = parseFloat(symbol.chg || 0);
-                changeValue = chgFromWS !== 0 ? chgFromWS : (prevLtp > 0 ? (ltpValue - prevLtp) : 0);
-                
-                prevLtpValue = prevLtp || ltpValue;
-                
-                // For percentage: ALWAYS use close price as base (standard trading calculation)
-                // Percentage = ((Current Price - Close Price) / Close Price) * 100
+                // Calculate percentage ONLY from close price
                 if (closePrice > 0 && ltpValue > 0) {
-                  // Calculate change from close for percentage calculation
-                  const changeFromClose = ltpValue - closePrice;
-                  const calculatedPercent = ((changeFromClose / closePrice) * 100);
-                  // Validate percentage - if unreasonably large (>50%), show 0.00
-                  changePercent = (Math.abs(calculatedPercent) <= 50) ? calculatedPercent.toFixed(2) : '0.00';
-                } else if (chgFromWS !== 0 && closePrice === 0) {
-                  // Fallback: if WebSocket provides chg (which is change from close) but close is 0,
-                  // derive close price: close = ltp - chg, then calculate percentage
-                  const derivedClose = chgFromWS;
-                  if (derivedClose > 0) {
-                    changePercent = chgFromWS
-                  } else {
-                    changePercent = '0.00';
+                  const pct = ((ltpValue - closePrice) / closePrice) * 100;
+                  // Only show if reasonable (within ±15%)
+                  if (Math.abs(pct) <= 15) {
+                    changePercent = pct.toFixed(2);
                   }
-                } else {
-                  // If close price not available and can't derive it, cannot calculate accurate percentage
-                  changePercent = '0.00';
                 }
               }
               
-              const isPositive = changeValue >= 0;
+              // Use the calculated percentage for color (not raw chg value)
+              const isPositive = parseFloat(changePercent) >= 0;
               const changeColor = isPositive ? 'text-emerald-400' : 'text-red-400';
               
               // Format prices based on exchange type
@@ -1310,13 +1279,13 @@ const MarketWatch = () => {
                     }, 150);
                   }}
                 >
-                  {/* Mobile Layout - Simplified: Only Symbol, Ask, Bid */}
+                  {/* Mobile Layout - Simplified: Only Symbol, Bid, Ask with Pill Buttons */}
                   <div className="sm:hidden">
-                    <div className="flex items-center justify-between gap-4 py-2">
+                    <div className="flex items-center justify-between gap-3 py-2">
                       {/* Symbol - Large and Bold */}
                       <div className="flex-1 min-w-0">
                         <span 
-                          className="text-2xl font-extrabold text-white block truncate"
+                          className="text-xl font-extrabold text-white block truncate"
                           style={{
                             fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
                             letterSpacing: '-0.02em',
@@ -1326,36 +1295,61 @@ const MarketWatch = () => {
                         </span>
                       </div>
                       
-                      {/* Ask - Large Green */}
-                      <div className="flex flex-col items-end flex-shrink-0">
-                        <span className="text-xs text-gray-400 uppercase mb-1" style={{ fontSize: '0.65rem' }}>ASK</span>
-                        <span 
-                          className="text-2xl font-bold"
+                      {/* BID and ASK Pill Buttons */}
+                      <div className="flex gap-2 flex-shrink-0">
+                        {/* BID - Red Pill */}
+                        <button
+                          className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden"
                           style={{
-                            color: '#10B981',
-                            fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
-                            fontVariantNumeric: 'tabular-nums',
-                            letterSpacing: '-0.02em',
+                            background: 'linear-gradient(180deg, #DC2626 0%, #991B1B 100%)',
+                            boxShadow: '0 4px 12px rgba(220, 38, 38, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+                            color: 'white',
+                            width: '85px',
+                            height: '38px',
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSymbolClick(symbol);
                           }}
                         >
-                          {askDisplay}
-                        </span>
-                      </div>
-                      
-                      {/* Bid - Large Red */}
-                      <div className="flex flex-col items-end flex-shrink-0">
-                        <span className="text-xs text-gray-400 uppercase mb-1" style={{ fontSize: '0.65rem' }}>BID</span>
-                        <span 
-                          className="text-2xl font-bold"
+                          <span 
+                            className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2"
+                            style={{
+                              fontSize: bidDisplay && bidDisplay.length > 6 ? '0.7rem' : '0.85rem',
+                              fontVariantNumeric: 'tabular-nums',
+                              fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
+                            }}
+                          >
+                            {bidDisplay}
+                          </span>
+                        </button>
+                        
+                        {/* ASK - Green Pill */}
+                        <button
+                          className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden"
                           style={{
-                            color: '#EF4444',
-                            fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
-                            fontVariantNumeric: 'tabular-nums',
-                            letterSpacing: '-0.02em',
+                            background: 'linear-gradient(180deg, #22C55E 0%, #15803D 100%)',
+                            boxShadow: '0 4px 12px rgba(34, 197, 94, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+                            color: 'white',
+                            width: '85px',
+                            height: '38px',
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSymbolClick(symbol);
                           }}
                         >
-                          {bidDisplay}
-                        </span>
+                          <span 
+                            className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2"
+                            style={{
+                              fontSize: askDisplay && askDisplay.length > 6 ? '0.7rem' : '0.85rem',
+                              fontVariantNumeric: 'tabular-nums',
+                              fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
+                            }}
+                          >
+                            {askDisplay}
+                          </span>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -1417,32 +1411,62 @@ const MarketWatch = () => {
                     </div>
                   </div>
                   
-                    {/* ASK Column - Green Text */}
+                    {/* BID Column - Red Pill Button */}
                   <div className="text-center flex items-center justify-center relative z-10">
-                      <span className="text-base whitespace-nowrap block text-center font-bold" style={{ 
-                        fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
-                        color: '#22C55E',
-                        fontSize: '1rem',
-                        letterSpacing: '-0.01em',
-                        fontVariantNumeric: 'tabular-nums',
-                        textRendering: 'optimizeLegibility',
-                      }}>
-                        {askDisplay}
-                      </span>
+                      <button
+                        className="rounded-full font-bold transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center overflow-hidden cursor-pointer"
+                        style={{
+                          background: 'linear-gradient(180deg, #DC2626 0%, #991B1B 100%)',
+                          boxShadow: '0 4px 12px rgba(220, 38, 38, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+                          color: 'white',
+                          width: '115px',
+                          height: '44px',
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSymbolClick(symbol);
+                        }}
+                      >
+                        <span 
+                          className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2"
+                          style={{
+                            fontSize: bidDisplay && bidDisplay.length > 6 ? '0.85rem' : '1rem',
+                            fontVariantNumeric: 'tabular-nums',
+                            fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
+                          }}
+                        >
+                          {bidDisplay}
+                        </span>
+                      </button>
                   </div>
                   
-                    {/* BID Column - Red Text */}
+                    {/* ASK Column - Green Pill Button */}
                   <div className="text-center flex items-center justify-center relative z-10">
-                      <span className="text-base whitespace-nowrap block text-center font-bold" style={{ 
-                        fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
-                        color: '#EF4444',
-                        fontSize: '1rem',
-                        letterSpacing: '-0.01em',
-                        fontVariantNumeric: 'tabular-nums',
-                        textRendering: 'optimizeLegibility',
-                      }}>
-                        {bidDisplay}
-                      </span>
+                      <button
+                        className="rounded-full font-bold transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center overflow-hidden cursor-pointer"
+                        style={{
+                          background: 'linear-gradient(180deg, #22C55E 0%, #15803D 100%)',
+                          boxShadow: '0 4px 12px rgba(34, 197, 94, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+                          color: 'white',
+                          width: '115px',
+                          height: '44px',
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSymbolClick(symbol);
+                        }}
+                      >
+                        <span 
+                          className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2"
+                          style={{
+                            fontSize: askDisplay && askDisplay.length > 6 ? '0.85rem' : '1rem',
+                            fontVariantNumeric: 'tabular-nums',
+                            fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
+                          }}
+                        >
+                          {askDisplay}
+                        </span>
+                      </button>
                   </div>
                   
                   {/* LTP Column - Numbers */}
@@ -1570,80 +1594,55 @@ const MarketWatch = () => {
                 </div>
             </div>
             
-             {/* Mobile Only: Simplified List - Symbol, Ask, Bid Only */}
+             {/* Mobile Only: Simplified List - Symbol, Bid, Ask Only */}
              <div className="sm:hidden mt-3 pb-0 px-4">
+              {/* Mobile Header Row */}
+              <div className="flex items-center justify-between mb-3 px-1">
+                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Symbol</div>
+                <div className="flex gap-3">
+                  <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center" style={{ width: '90px' }}>BID</div>
+                  <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center" style={{ width: '90px' }}>ASK</div>
+                </div>
+              </div>
             {filteredSymbols.map((symbol) => {
               // Check if this is a Crypto/Forex/Commodity tab (FX tabs)
               const isFXTab = ['CRYPTO', 'FOREX', 'COMMODITY'].includes(activeTab);
               
-              let changeValue, ltpValue, prevLtpValue, changePercent;
+              // SIMPLIFIED: Only calculate percentage from close price - no raw chg values
+              let changePercent = '0.00';
+              let ltpValue = 0;
               
               if (isFXTab) {
-                // For FX symbols, use USD prices for percentage calculation
                 const ltpUSD = parseFloat(symbol.ltpUSD || 0);
-                // Get close price in USD (convert from INR close if needed, or use stored closeUSD)
                 const closeINR = parseFloat(symbol.close || 0);
                 const storedCloseUSD = parseFloat(symbol.closeUSD || 0);
                 const closeUSD = storedCloseUSD > 0 ? storedCloseUSD : (closeINR > 0 && usdToInrRate > 0 ? closeINR / usdToInrRate : 0);
-                
-                // For display: show intraday change (from previous tick) - this is what chgUSD represents
-                const prevLtpUSD = parseFloat(symbol.prevLtpUSD || 0);
-                // Use chgUSD if available (intraday change), otherwise calculate from prevLtp
-                const chgUSDValue = parseFloat(symbol.chgUSD !== undefined ? symbol.chgUSD : 0);
-                changeValue = chgUSDValue !== 0 ? chgUSDValue : (prevLtpUSD > 0 ? (ltpUSD - prevLtpUSD) : 0);
-                
                 ltpValue = ltpUSD;
-                prevLtpValue = prevLtpUSD || ltpUSD;
                 
-                // For percentage: ALWAYS use close price as base (standard trading calculation)
-                // Percentage = ((Current Price - Close Price) / Close Price) * 100
+                // Calculate percentage ONLY from close price
                 if (closeUSD > 0 && ltpUSD > 0) {
-                  // Calculate change from close for percentage calculation
-                  const changeFromCloseUSD = ltpUSD - closeUSD;
-                  const calculatedPercent = ((changeFromCloseUSD / closeUSD) * 100);
-                  // Validate percentage - if unreasonably large (>50%), show 0.00
-                  changePercent = (Math.abs(calculatedPercent) <= 50) ? calculatedPercent.toFixed(2) : '0.00';
-                } else {
-                  // If close price not available, cannot calculate accurate percentage
-                  changePercent = '0.00';
+                  const pct = ((ltpUSD - closeUSD) / closeUSD) * 100;
+                  // Only show if reasonable (within ±15%)
+                  if (Math.abs(pct) <= 15) {
+                    changePercent = pct.toFixed(2);
+                  }
                 }
               } else {
-                // For MCX/NSE/OPT, use INR prices
                 ltpValue = parseFloat(symbol.ltp || 0);
                 const closePrice = parseFloat(symbol.close || 0);
-                const prevLtp = parseFloat(symbol.prevLtp || 0);
                 
-                // For display: use chg from WebSocket (this is change from close for MCX/NSE)
-                // If chg is 0 or not available, calculate from prevLtp for intraday change display
-                const chgFromWS = parseFloat(symbol.chg || 0);
-                changeValue = chgFromWS !== 0 ? chgFromWS : (prevLtp > 0 ? (ltpValue - prevLtp) : 0);
-                
-                prevLtpValue = prevLtp || ltpValue;
-                
-                // For percentage: ALWAYS use close price as base (standard trading calculation)
-                // Percentage = ((Current Price - Close Price) / Close Price) * 100
+                // Calculate percentage ONLY from close price
                 if (closePrice > 0 && ltpValue > 0) {
-                  // Calculate change from close for percentage calculation
-                  const changeFromClose = ltpValue - closePrice;
-                  const calculatedPercent = ((changeFromClose / closePrice) * 100);
-                  // Validate percentage - if unreasonably large (>50%), show 0.00
-                  changePercent = (Math.abs(calculatedPercent) <= 50) ? calculatedPercent.toFixed(2) : '0.00';
-                } else if (chgFromWS !== 0 && closePrice === 0) {
-                  // Fallback: if WebSocket provides chg (which is change from close) but close is 0,
-                  // derive close price: close = ltp - chg, then calculate percentage
-                  const derivedClose = chgFromWS;
-                  if (derivedClose > 0) {
-                    changePercent = chgFromWS
-                  } else {
-                    changePercent = '0.00';
+                  const pct = ((ltpValue - closePrice) / closePrice) * 100;
+                  // Only show if reasonable (within ±15%)
+                  if (Math.abs(pct) <= 15) {
+                    changePercent = pct.toFixed(2);
                   }
-                } else {
-                  // If close price not available and can't derive it, cannot calculate accurate percentage
-                  changePercent = '0.00';
                 }
               }
               
-              const isPositive = changeValue >= 0;
+              // Use the calculated percentage for color (not raw chg value)
+              const isPositive = parseFloat(changePercent) >= 0;
               const changeColor = isPositive ? 'text-emerald-400' : 'text-red-400';
               
               // Format prices based on exchange type
@@ -1729,12 +1728,12 @@ const MarketWatch = () => {
               volumeDisplay = volumeValue > 0 ? volumeValue.toLocaleString() : '-';
               
               // Determine color for CHG based on positive/negative - Premium Emerald/Rose
-              const chgColor = parseFloat(symbol.chg || 0) >= 0 
+              const chgColor = parseFloat(changePercent) >= 0 
                 ? 'linear-gradient(to bottom right, #059669, #10B981)' 
                 : 'linear-gradient(to bottom right, #DC2626, #EF4444)';
 
               // Clean single-line layout like the reference image
-              const isPositiveChange = changeValue >= 0;
+              const isPositiveChange = parseFloat(changePercent) >= 0;
               const priceChangeColor = isPositiveChange ? '#22C55E' : '#EF4444';
               
               return (
@@ -1792,40 +1791,58 @@ const MarketWatch = () => {
                      </div>
                    </div>
                    
-                   {/* Right: Buy and Sell Buttons with prices inside */}
-                   <div className="flex gap-2 flex-shrink-0 ml-auto">
+                   {/* Right: BID and ASK Buttons with prices inside - Pill Style */}
+                   <div className="flex gap-3 flex-shrink-0 ml-auto">
+                     {/* BID Button - Red (Left) */}
                      <button
-                       className="px-3 py-3 rounded-lg font-bold text-sm transition-all duration-200 active:scale-95 flex flex-col items-center justify-center"
+                       className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden"
                        style={{
-                         background: '#22C55E',
+                         background: 'linear-gradient(180deg, #DC2626 0%, #991B1B 100%)',
+                         boxShadow: '0 4px 12px rgba(220, 38, 38, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
                          color: 'white',
-                         width: '85px',
-                         minHeight: '58px',
+                         width: '90px',
+                         height: '42px',
                        }}
                        onClick={(e) => {
                          e.stopPropagation();
                          handleSymbolClick(symbol);
                        }}
                      >
-                       <div className="text-[10px] opacity-80 mb-1">Buy</div>
-                       <div className="text-sm font-bold overflow-hidden text-ellipsis whitespace-nowrap w-full text-center">{askDisplay}</div>
+                       <span 
+                         className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2"
+                         style={{
+                           fontSize: bidDisplay && bidDisplay.length > 6 ? '0.75rem' : '0.9rem',
+                           fontVariantNumeric: 'tabular-nums',
+                         }}
+                       >
+                         {bidDisplay}
+                       </span>
                      </button>
                      
+                     {/* ASK Button - Green (Right) */}
                      <button
-                       className="px-3 py-3 rounded-lg font-bold text-sm transition-all duration-200 active:scale-95 flex flex-col items-center justify-center"
+                       className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden"
                        style={{
-                         background: '#EF4444',
+                         background: 'linear-gradient(180deg, #22C55E 0%, #15803D 100%)',
+                         boxShadow: '0 4px 12px rgba(34, 197, 94, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
                          color: 'white',
-                         width: '85px',
-                         minHeight: '58px',
+                         width: '90px',
+                         height: '42px',
                        }}
                        onClick={(e) => {
                          e.stopPropagation();
                          handleSymbolClick(symbol);
                        }}
                      >
-                       <div className="text-[10px] opacity-80 mb-1">Sell</div>
-                       <div className="text-sm font-bold overflow-hidden text-ellipsis whitespace-nowrap w-full text-center">{bidDisplay}</div>
+                       <span 
+                         className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2"
+                         style={{
+                           fontSize: askDisplay && askDisplay.length > 6 ? '0.75rem' : '0.9rem',
+                           fontVariantNumeric: 'tabular-nums',
+                         }}
+                       >
+                         {askDisplay}
+                       </span>
                      </button>
                    </div>
                 </div>
