@@ -1600,31 +1600,31 @@ const MarketWatch = () => {
               <div 
                 className="flex items-center justify-between"
                 style={{
-                  padding: '8px 16px',
-                  borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                  background: 'rgba(15, 23, 42, 0.4)',
+                  padding: '10px 16px',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                  background: 'rgba(15, 23, 42, 0.5)',
                 }}
               >
                 <div 
                   style={{
-                    fontSize: '0.65rem',
-                    color: 'rgba(148, 163, 184, 0.6)',
+                    fontSize: '0.75rem',
+                    color: 'rgba(148, 163, 184, 0.7)',
                     textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
+                    letterSpacing: '0.08em',
                     fontWeight: 600,
                   }}
                 >
                   Symbol
                 </div>
-                <div className="flex" style={{ gap: '6px' }}>
+                <div className="flex" style={{ gap: '12px' }}>
                   <div 
                     style={{
-                      fontSize: '0.65rem',
-                      color: 'rgba(148, 163, 184, 0.6)',
+                      fontSize: '0.75rem',
+                      color: 'rgba(148, 163, 184, 0.7)',
                       textTransform: 'uppercase',
-                      letterSpacing: '0.05em',
+                      letterSpacing: '0.08em',
                       fontWeight: 600,
-                      width: '75px',
+                      width: '90px',
                       textAlign: 'right',
                     }}
                   >
@@ -1632,12 +1632,12 @@ const MarketWatch = () => {
                   </div>
                   <div 
                     style={{
-                      fontSize: '0.65rem',
-                      color: 'rgba(148, 163, 184, 0.6)',
+                      fontSize: '0.75rem',
+                      color: 'rgba(148, 163, 184, 0.7)',
                       textTransform: 'uppercase',
-                      letterSpacing: '0.05em',
+                      letterSpacing: '0.08em',
                       fontWeight: 600,
-                      width: '75px',
+                      width: '90px',
                       textAlign: 'right',
                     }}
                   >
@@ -1736,19 +1736,15 @@ const MarketWatch = () => {
                 >
                   <div className="flex items-center justify-between">
                     {/* Left Section: Symbol, Exchange, Lot, Date */}
-                    <div className="flex-1 min-w-0 pr-2">
+                    <div className="flex-1 min-w-0 pr-4">
                       {/* Symbol Name with Date */}
                       <div className="flex items-center gap-2">
                         <span 
-                          className="font-semibold text-white"
+                          className="font-semibold text-white truncate"
                           style={{
                             fontSize: '1rem',
-                            letterSpacing: '-0.03em',
+                            letterSpacing: '-0.01em',
                             lineHeight: 1.3,
-                            fontStretch: 'condensed',
-                            fontFamily: "'Arial Narrow', 'Roboto Condensed', 'Liberation Sans Narrow', sans-serif",
-                            transform: 'scaleX(0.92)',
-                            transformOrigin: 'left',
                           }}
                         >
                           {symbolDisplay}
@@ -1756,14 +1752,13 @@ const MarketWatch = () => {
                         {formattedDate && (
                           <span 
                             style={{
-                              fontSize: '0.6rem',
+                              fontSize: '0.65rem',
                               color: 'rgba(148, 163, 184, 0.8)',
                               background: 'rgba(59, 130, 246, 0.15)',
-                              padding: '2px 5px',
+                              padding: '2px 6px',
                               borderRadius: '4px',
                               fontWeight: 500,
                               whiteSpace: 'nowrap',
-                              marginLeft: '-8px',
                             }}
                           >
                             {formattedDate}
@@ -1773,73 +1768,51 @@ const MarketWatch = () => {
                       
                       {/* Exchange and Lot Info */}
                       <div 
-                        className="flex items-center gap-1.5 mt-0.5"
+                        className="flex items-center gap-2 mt-0.5"
                         style={{
-                          fontSize: '0.65rem',
-                          color: 'rgba(148, 163, 184, 0.6)',
+                          fontSize: '0.7rem',
+                          color: 'rgba(148, 163, 184, 0.7)',
                         }}
                       >
                         <span>{symbol.ExchangeType || activeTab}</span>
-                        <span style={{ color: 'rgba(148, 163, 184, 0.3)' }}>•</span>
+                        <span style={{ color: 'rgba(148, 163, 184, 0.4)' }}>•</span>
                         <span>Lot: {symbol.Lotsize || 1}</span>
                       </div>
                     </div>
                     
                     {/* Right Section: Two Price Columns - Fixed Width for Consistency */}
-                    <div className="flex flex-shrink-0" style={{ gap: '6px' }}>
+                    <div className="flex flex-shrink-0" style={{ gap: '12px' }}>
                       {/* BID Column */}
-                      <div style={{ width: '75px', textAlign: 'right' }}>
+                      <div style={{ width: '90px', textAlign: 'right' }}>
                         <div 
                           className="font-bold"
                           style={{
                             color: '#EF4444',
-                            fontSize: '0.9rem',
+                            fontSize: '1.1rem',
                             fontVariantNumeric: 'tabular-nums',
                             fontFamily: "'SF Mono', 'Consolas', 'Monaco', monospace",
-                            letterSpacing: '-0.04em',
+                            letterSpacing: '-0.02em',
                             lineHeight: 1.2,
                           }}
                         >
                           {bidDisplay}
                         </div>
-                        <div 
-                          style={{
-                            fontSize: '0.55rem',
-                            color: 'rgba(148, 163, 184, 0.5)',
-                            marginTop: '2px',
-                            fontVariantNumeric: 'tabular-nums',
-                            letterSpacing: '-0.02em',
-                          }}
-                        >
-                          L: {lowDisplay}
-                        </div>
                       </div>
                       
                       {/* ASK Column */}
-                      <div style={{ width: '75px', textAlign: 'right' }}>
+                      <div style={{ width: '90px', textAlign: 'right' }}>
                         <div 
                           className="font-bold"
                           style={{
                             color: '#3B82F6',
-                            fontSize: '0.9rem',
+                            fontSize: '1.1rem',
                             fontVariantNumeric: 'tabular-nums',
                             fontFamily: "'SF Mono', 'Consolas', 'Monaco', monospace",
-                            letterSpacing: '-0.04em',
+                            letterSpacing: '-0.02em',
                             lineHeight: 1.2,
                           }}
                         >
                           {askDisplay}
-                        </div>
-                        <div 
-                          style={{
-                            fontSize: '0.55rem',
-                            color: 'rgba(148, 163, 184, 0.5)',
-                            marginTop: '2px',
-                            fontVariantNumeric: 'tabular-nums',
-                            letterSpacing: '-0.02em',
-                          }}
-                        >
-                          H: {highDisplay}
                         </div>
                       </div>
                     </div>
