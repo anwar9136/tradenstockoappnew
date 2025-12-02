@@ -1599,9 +1599,9 @@ const MarketWatch = () => {
               {/* Mobile Header Row */}
               <div className="flex items-center justify-between mb-3 px-1">
                 <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Symbol</div>
-                <div className="flex gap-3">
-                  <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center" style={{ width: '90px' }}>BID</div>
-                  <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center" style={{ width: '90px' }}>ASK</div>
+                <div className="flex gap-2.5">
+                  <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center" style={{ width: '82px' }}>BID</div>
+                  <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-center" style={{ width: '82px' }}>ASK</div>
                 </div>
               </div>
             {filteredSymbols.map((symbol) => {
@@ -1792,16 +1792,16 @@ const MarketWatch = () => {
                    </div>
                    
                    {/* Right: BID and ASK Buttons with prices inside - Pill Style */}
-                   <div className="flex gap-3 flex-shrink-0 ml-auto">
+                   <div className="flex gap-2.5 flex-shrink-0 ml-auto">
                      {/* BID Button - Red (Left) */}
                      <button
                        className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden"
                        style={{
                          background: 'linear-gradient(180deg, #DC2626 0%, #991B1B 100%)',
-                         boxShadow: '0 4px 12px rgba(220, 38, 38, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+                         boxShadow: '0 3px 10px rgba(220, 38, 38, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
                          color: 'white',
-                         width: '90px',
-                         height: '42px',
+                         width: '82px',
+                         height: '38px',
                        }}
                        onClick={(e) => {
                          e.stopPropagation();
@@ -1809,9 +1809,9 @@ const MarketWatch = () => {
                        }}
                      >
                        <span 
-                         className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2"
+                         className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-1.5"
                          style={{
-                           fontSize: bidDisplay && bidDisplay.length > 6 ? '0.75rem' : '0.9rem',
+                           fontSize: bidDisplay && bidDisplay.length > 6 ? '0.7rem' : '0.85rem',
                            fontVariantNumeric: 'tabular-nums',
                          }}
                        >
@@ -1824,10 +1824,10 @@ const MarketWatch = () => {
                        className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden"
                        style={{
                          background: 'linear-gradient(180deg, #22C55E 0%, #15803D 100%)',
-                         boxShadow: '0 4px 12px rgba(34, 197, 94, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+                         boxShadow: '0 3px 10px rgba(34, 197, 94, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
                          color: 'white',
-                         width: '90px',
-                         height: '42px',
+                         width: '82px',
+                         height: '38px',
                        }}
                        onClick={(e) => {
                          e.stopPropagation();
@@ -1835,9 +1835,9 @@ const MarketWatch = () => {
                        }}
                      >
                        <span 
-                         className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2"
+                         className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-1.5"
                          style={{
-                           fontSize: askDisplay && askDisplay.length > 6 ? '0.75rem' : '0.9rem',
+                           fontSize: askDisplay && askDisplay.length > 6 ? '0.7rem' : '0.85rem',
                            fontVariantNumeric: 'tabular-nums',
                          }}
                        >
