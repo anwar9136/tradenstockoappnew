@@ -1709,7 +1709,7 @@ const MarketWatch = () => {
                             <span 
                               className="font-bold text-white"
                               style={{
-                                fontSize: '1.1rem',
+                                fontSize: '0.95rem',
                                 letterSpacing: '-0.01em',
                                 lineHeight: 1.3,
                               }}
@@ -1761,7 +1761,7 @@ const MarketWatch = () => {
                         <span 
                           style={{
                             color: parseFloat(symbol.sell || 0) >= parseFloat(symbol.prevSell || symbol.sell || 0) ? '#10B981' : '#F43F5E',
-                            fontSize: '0.9rem',
+                            fontSize: '1rem',
                             fontWeight: 700,
                             fontVariantNumeric: 'tabular-nums',
                             fontFamily: "'JetBrains Mono', 'Fira Code', 'SF Mono', 'Consolas', monospace",
@@ -1780,7 +1780,7 @@ const MarketWatch = () => {
                         <span 
                           style={{
                             color: parseFloat(symbol.buy || 0) >= parseFloat(symbol.prevBuy || symbol.buy || 0) ? '#10B981' : '#F43F5E',
-                            fontSize: '0.9rem',
+                            fontSize: '1rem',
                             fontWeight: 700,
                             fontVariantNumeric: 'tabular-nums',
                             fontFamily: "'JetBrains Mono', 'Fira Code', 'SF Mono', 'Consolas', monospace",
