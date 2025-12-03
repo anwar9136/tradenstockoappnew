@@ -1760,11 +1760,8 @@ const MarketWatch = () => {
                             {formattedDate && !isLongSymbol && (
                               <span 
                                 style={{
-                                  fontSize: '0.55rem',
-                                  color: 'rgba(148, 163, 184, 0.7)',
-                                  background: 'rgba(59, 130, 246, 0.12)',
-                                  padding: '1px 4px',
-                                  borderRadius: '3px',
+                                  fontSize: '0.6rem',
+                                  color: 'rgba(96, 165, 250, 0.9)',
                                   fontWeight: 500,
                                   whiteSpace: 'nowrap',
                                 }}
@@ -1788,7 +1785,7 @@ const MarketWatch = () => {
                             {formattedDate && isLongSymbol && (
                               <>
                                 <span style={{ color: 'rgba(148, 163, 184, 0.25)' }}>•</span>
-                                <span style={{ color: 'rgba(96, 165, 250, 0.8)', fontWeight: 500 }}>
+                                <span style={{ color: 'rgba(96, 165, 250, 0.9)', fontWeight: 500 }}>
                                   {formattedDate}
                                 </span>
                               </>
