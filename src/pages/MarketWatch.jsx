@@ -1804,9 +1804,8 @@ const MarketWatch = () => {
                       <div 
                         className="rounded-full flex items-center justify-center"
                         style={{
-                          background: 'linear-gradient(180deg, rgba(239, 68, 68, 0.2) 0%, rgba(185, 28, 28, 0.25) 100%)',
-                          boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.1), 0 1px 3px rgba(0,0,0,0.15)',
-                          border: '1px solid rgba(239, 68, 68, 0.3)',
+                          background: 'linear-gradient(180deg, #C53030 0%, #9B2C2C 100%)',
+                          boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.2)',
                           width: '80px',
                           height: '32px',
                         }}
@@ -1814,7 +1813,7 @@ const MarketWatch = () => {
                         <span 
                           className="font-semibold text-center"
                           style={{
-                            color: '#F87171',
+                            color: 'white',
                             fontSize: '0.8rem',
                             fontVariantNumeric: 'tabular-nums',
                             fontFamily: "'SF Mono', 'Consolas', 'Monaco', monospace",
@@ -1829,9 +1828,8 @@ const MarketWatch = () => {
                       <div 
                         className="rounded-full flex items-center justify-center"
                         style={{
-                          background: 'linear-gradient(180deg, rgba(34, 197, 94, 0.2) 0%, rgba(22, 163, 74, 0.25) 100%)',
-                          boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.1), 0 1px 3px rgba(0,0,0,0.15)',
-                          border: '1px solid rgba(34, 197, 94, 0.3)',
+                          background: 'linear-gradient(180deg, #38A169 0%, #276749 100%)',
+                          boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.2)',
                           width: '80px',
                           height: '32px',
                         }}
@@ -1839,7 +1837,7 @@ const MarketWatch = () => {
                         <span 
                           className="font-semibold text-center"
                           style={{
-                            color: '#4ADE80',
+                            color: 'white',
                             fontSize: '0.8rem',
                             fontVariantNumeric: 'tabular-nums',
                             fontFamily: "'SF Mono', 'Consolas', 'Monaco', monospace",
