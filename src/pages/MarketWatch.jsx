@@ -1747,12 +1747,8 @@ const MarketWatch = () => {
                               className="font-semibold text-white"
                               style={{
                                 fontSize: '0.9rem',
-                                letterSpacing: '-0.02em',
+                                letterSpacing: '-0.01em',
                                 lineHeight: 1.2,
-                                fontStretch: 'condensed',
-                                fontFamily: "'Arial Narrow', 'Roboto Condensed', 'Liberation Sans Narrow', sans-serif",
-                                transform: 'scaleX(0.94)',
-                                transformOrigin: 'left',
                               }}
                             >
                               {symbolDisplay}
