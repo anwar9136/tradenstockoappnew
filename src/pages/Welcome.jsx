@@ -118,6 +118,15 @@ const Welcome = () => {
             <img src={logo} alt="TradeNstocko Logo" className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg object-contain" />
             <span className="text-white font-semibold text-sm sm:text-base md:text-lg tracking-tight">Tradenstocko</span>
           </div>
+          
+          {/* Login Button in Navbar */}
+          <button
+            onClick={handleLogin}
+            className="backdrop-blur-xl bg-white/10 border border-white/30 text-white font-semibold py-2.5 px-5 sm:py-3 sm:px-7 rounded-full transition-all duration-300 flex items-center justify-center space-x-2 hover:bg-white/15 hover:border-white/50 hover:shadow-[0_0_25px_rgba(255,255,255,0.15)] text-sm sm:text-base"
+          >
+            <LogIn className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+            <span>Login</span>
+          </button>
         </div>
       </header>
 
@@ -185,15 +194,6 @@ const Welcome = () => {
                     <UserPlus className="w-5 h-5 flex-shrink-0" />
                     <span>Open New Account</span>
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                  </button>
-
-                  {/* Secondary CTA - Glass Button */}
-                  <button
-                    onClick={handleLogin}
-                    className="w-full md:w-auto backdrop-blur-xl bg-white/5 border border-white/20 text-white font-semibold py-5 px-8 rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 hover:bg-white/10 hover:border-white/40 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]"
-                  >
-                    <LogIn className="w-5 h-5 flex-shrink-0" />
-                    <span>Login</span>
                   </button>
                 </div>
               </div>
@@ -343,15 +343,6 @@ const Welcome = () => {
                   <UserPlus className="w-4 h-4 flex-shrink-0" />
                   <span>Open New Account</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                </button>
-
-                {/* Secondary CTA - Glass Button */}
-                <button
-                  onClick={handleLogin}
-                  className="w-full md:w-auto backdrop-blur-xl bg-white/5 border border-white/20 text-white font-semibold py-3.5 px-6 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 hover:bg-white/10 hover:border-white/40 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] text-sm"
-                >
-                  <LogIn className="w-4 h-4 flex-shrink-0" />
-                  <span>Login</span>
                 </button>
               </div>
             </div>

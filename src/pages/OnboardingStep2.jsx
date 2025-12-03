@@ -9,9 +9,9 @@ const OnboardingStep2 = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="h-screen bg-white flex flex-col overflow-hidden" style={{ height: '100dvh' }}>
       {/* Header */}
-      <div className="flex justify-between items-center p-6">
+      <div className="flex justify-between items-center p-4 sm:p-6 flex-shrink-0">
         <div className="w-8 h-8 bg-trading-primary-600 rounded-lg flex items-center justify-center">
           <span className="text-white font-bold text-sm">T</span>
         </div>
@@ -19,9 +19,9 @@ const OnboardingStep2 = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-8">
+      <div className="flex-1 flex flex-col items-center justify-center px-6 sm:px-8 overflow-y-auto min-h-0">
         {/* Illustration */}
-        <div className="mb-8 max-w-sm">
+        <div className="mb-4 sm:mb-8 max-w-sm">
           <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl p-8 mb-6">
             <div className="flex flex-col items-center space-y-4">
               {/* Person on beanbag */}
@@ -62,7 +62,7 @@ const OnboardingStep2 = () => {
         </div>
 
         {/* Text Content */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-6 sm:mb-12">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">
             Start your trading journey with Tradenstocko
           </h1>
@@ -73,9 +73,9 @@ const OnboardingStep2 = () => {
       </div>
 
       {/* Footer */}
-      <div className="p-6">
+      <div className="p-4 sm:p-6 flex-shrink-0 pb-6 sm:pb-8">
         {/* Progress dots */}
-        <div className="flex justify-center space-x-2 mb-6">
+        <div className="flex justify-center space-x-2 mb-4 sm:mb-6">
           <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
           <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
         </div>
