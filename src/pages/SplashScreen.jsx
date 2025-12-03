@@ -23,16 +23,13 @@ const SplashScreen = ({ onFinish }) => {
   }, [onFinish]);
 
   return (
-    <div className="flex flex-col items-center justify-between min-h-screen bg-dark-gradient relative overflow-hidden py-8">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-dark-gradient relative overflow-hidden py-8">
       {/* Animated background elements */}
       {/* <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 rounded-full animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-green-500/10 rounded-full animate-pulse delay-1000"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/5 rounded-full animate-pulse delay-500"></div>
       </div> */}
-
-      {/* Spacer to push content to center */}
-      <div></div>
 
       {/* Centered content */}
       <div className="flex flex-col items-center">
@@ -53,28 +50,24 @@ const SplashScreen = ({ onFinish }) => {
               <TrendingUp className="w-10 h-10 text-white" />
             </div>
           </div>
-          
-       
         </div>
         
         {/* App Title with gradient text */}
-        <div className="relative z-10 text-center mb-8">
+        <div className="relative z-10 text-center mb-6">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent mb-2">
             TradeStocko
           </h1>
           <p className="text-gray-300 text-sm">Professional Trading Platform</p>
         </div>
+        
+        {/* Loading progress bar - right after text */}
+        <div className="relative z-10 w-64 h-2 bg-white/20 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-gradient-to-r from-blue-500 to-green-500 rounded-full transition-all duration-300 ease-out"
+            style={{ width: `${loadingProgress}%` }}
+          ></div>
+        </div>
       </div>
-      
-      {/* Loading progress bar at the bottom */}
-      <div className="relative z-10 w-64 h-2 bg-white/20 rounded-full overflow-hidden">
-        <div 
-          className="h-full bg-gradient-to-r from-blue-500 to-green-500 rounded-full transition-all duration-300 ease-out"
-          style={{ width: `${loadingProgress}%` }}
-        ></div>
-      </div>
-      
-      
 
     </div>
   );

@@ -122,16 +122,16 @@ const Welcome = () => {
           {/* Login Button in Navbar */}
           <button
             onClick={handleLogin}
-            className="backdrop-blur-xl bg-white/10 border border-white/30 text-white font-semibold py-2.5 px-5 sm:py-3 sm:px-7 rounded-full transition-all duration-300 flex items-center justify-center space-x-2 hover:bg-white/15 hover:border-white/50 hover:shadow-[0_0_25px_rgba(255,255,255,0.15)] text-sm sm:text-base"
+            className="backdrop-blur-xl bg-white/5 border border-white/20 text-white font-semibold py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-7 lg:py-3.5 lg:px-8 rounded-full transition-all duration-300 flex items-center justify-center space-x-1.5 sm:space-x-2 md:space-x-2.5 hover:bg-white/10 hover:border-white/40 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] text-xs sm:text-sm md:text-base"
           >
-            <LogIn className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+            <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0" />
             <span>Login</span>
           </button>
         </div>
       </header>
 
       {/* Main Content - Vertical Stack on Mobile */}
-      <main className="relative z-10 pt-20 sm:pt-20 md:pt-24 lg:pt-32 pb-2 sm:pb-20 md:pb-24 px-4 sm:px-6 mobile-no-scroll" style={{ minHeight: '100dvh' }}>
+      <main className="relative z-10 pt-16 sm:pt-20 md:pt-24 lg:pt-32 pb-16 sm:pb-20 md:pb-24 px-4 sm:px-6 mobile-no-scroll flex flex-col justify-center lg:block" style={{ minHeight: '100dvh' }}>
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col lg:grid lg:grid-cols-2 gap-0 sm:gap-8 md:gap-10 lg:gap-12 items-center lg:items-start">
             {/* Hero Text Section - Center on Mobile, Left on Desktop */}
