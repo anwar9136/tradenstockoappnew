@@ -103,10 +103,10 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-app-bg">
+    <div className="h-screen overflow-hidden flex flex-col" style={{ height: '100dvh', background: '#080C12' }}>
 
       {/* Main Content - Show MarketWatch when on home tab */}
-      <div className="flex-1 pb-20">
+      <div className="flex-1 overflow-hidden">
         {activeTab === 'home' ? (
           <MarketWatch />
         ) : (
@@ -116,12 +116,12 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/* Bottom Navigation Bar - Glassmorphism */}
-      <div className="fixed bottom-0 left-0 right-0 z-50" style={{
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
+      {/* Bottom Navigation Bar - Part of flex layout */}
+      <div className="flex-shrink-0 z-50" style={{
+        background: '#080C12',
       }}>
-        <div className="bg-app-surface/80 border-t border-app-border/50 px-1 sm:px-2 py-2 sm:py-3" style={{
+        <div className="border-t border-app-border/50 px-1 sm:px-2 py-2 sm:py-3" style={{
+          background: 'rgba(15, 20, 30, 0.95)',
           boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
         }}>
           <div className="flex justify-around items-center">

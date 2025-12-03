@@ -17,10 +17,28 @@
 }
 
 @layer base {
+  html {
+    height: 100%;
+    height: 100dvh;
+    background: #080C12;
+  }
+  
   body {
+    height: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    overscroll-behavior: none;
+    background: #080C12;
     font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+  
+  #root {
+    height: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    background: #080C12;
   }
   
   /* Number formatting for trading prices */

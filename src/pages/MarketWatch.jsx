@@ -890,12 +890,12 @@ const MarketWatch = () => {
           100% { opacity: 0.15; transform: scale(0.98); }
         }
       `}</style>
-      <div className="min-h-screen sm:h-screen relative flex flex-col sm:overflow-hidden" style={{ background: '#080C12' }}>
+      <div className="relative flex flex-col overflow-hidden h-full" style={{ background: '#080C12' }}>
         {/* Premium background with subtle gradient overlay */}
       <div className="fixed inset-0 pointer-events-none z-0" style={{ background: 'radial-gradient(ellipse at top, rgba(59, 130, 246, 0.05) 0%, transparent 50%)' }}></div>
 
-      {/* Phase 2: Header Section - Modern Clean Header - Fixed on Desktop Only */}
-      <div className="flex-shrink-0 sm:sticky sm:top-0 z-30" style={{ 
+      {/* Phase 2: Header Section - Modern Clean Header - Fixed on Mobile and Desktop */}
+      <div className="flex-shrink-0 z-30" style={{ 
         transform: 'translateZ(0)',
       }}>
         <div 
@@ -991,7 +991,7 @@ const MarketWatch = () => {
        {/* Phase 2: Navigation Tabs - Premium Capsule Style - Fixed on Mobile and Desktop */}
        <div 
          ref={tabsContainerRef}
-         className="flex-shrink-0 sticky top-0 z-30 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] px-4 sm:px-8 py-4"
+         className="flex-shrink-0 z-30 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] px-4 sm:px-8 py-4"
           style={{
           minHeight: '72px',
           transform: 'translateZ(0)',
@@ -1295,61 +1295,45 @@ const MarketWatch = () => {
                         </span>
                       </div>
                       
-                      {/* BID and ASK Soft Glass Pill Buttons */}
-                      <div className="flex gap-2 flex-shrink-0">
-                        {/* BID - Red Soft Glass */}
-                        <button
-                          className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden"
+                      {/* BID and ASK - Dynamic Colors */}
+                      <div className="flex gap-5 flex-shrink-0">
+                        {/* BID - Dynamic Color */}
+                        <span 
                           style={{
-                            background: 'linear-gradient(180deg, #C53030 0%, #9B2C2C 100%)',
-                            boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.2)',
-                            color: 'white',
-                            width: '82px',
-                            height: '38px',
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSymbolClick(symbol);
+                            color: parseFloat(symbol.sell || 0) >= parseFloat(symbol.prevSell || symbol.sell || 0) ? '#10B981' : '#F43F5E',
+                            fontSize: '1rem',
+                            fontWeight: 700,
+                            fontVariantNumeric: 'tabular-nums',
+                            fontFamily: "'JetBrains Mono', 'Fira Code', 'SF Mono', 'Consolas', monospace",
+                            width: '85px',
+                            textAlign: 'right',
+                            letterSpacing: '-0.02em',
+                            textShadow: parseFloat(symbol.sell || 0) >= parseFloat(symbol.prevSell || symbol.sell || 0) 
+                              ? '0 0 8px rgba(16, 185, 129, 0.4)' 
+                              : '0 0 8px rgba(244, 63, 94, 0.4)',
                           }}
                         >
-                          <span 
-                            className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2"
-                            style={{
-                              fontSize: bidDisplay && bidDisplay.length > 6 ? '0.7rem' : '0.85rem',
-                              fontVariantNumeric: 'tabular-nums',
-                              fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
-                            }}
-                          >
-                            {bidDisplay}
-                          </span>
-                        </button>
+                          {bidDisplay}
+                        </span>
                         
-                        {/* ASK - Green Soft Glass */}
-                        <button
-                          className="rounded-full font-bold transition-all duration-200 active:scale-95 flex items-center justify-center overflow-hidden"
+                        {/* ASK - Dynamic Color */}
+                        <span 
                           style={{
-                            background: 'linear-gradient(180deg, #38A169 0%, #276749 100%)',
-                            boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.2)',
-                            color: 'white',
-                            width: '82px',
-                            height: '38px',
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSymbolClick(symbol);
+                            color: parseFloat(symbol.buy || 0) >= parseFloat(symbol.prevBuy || symbol.buy || 0) ? '#10B981' : '#F43F5E',
+                            fontSize: '1rem',
+                            fontWeight: 700,
+                            fontVariantNumeric: 'tabular-nums',
+                            fontFamily: "'JetBrains Mono', 'Fira Code', 'SF Mono', 'Consolas', monospace",
+                            width: '85px',
+                            textAlign: 'right',
+                            letterSpacing: '-0.02em',
+                            textShadow: parseFloat(symbol.buy || 0) >= parseFloat(symbol.prevBuy || symbol.buy || 0) 
+                              ? '0 0 8px rgba(16, 185, 129, 0.4)' 
+                              : '0 0 8px rgba(244, 63, 94, 0.4)',
                           }}
                         >
-                          <span 
-                            className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2"
-                            style={{
-                              fontSize: askDisplay && askDisplay.length > 6 ? '0.7rem' : '0.85rem',
-                              fontVariantNumeric: 'tabular-nums',
-                              fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
-                            }}
-                          >
-                            {askDisplay}
-                          </span>
-                        </button>
+                          {askDisplay}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -1411,62 +1395,42 @@ const MarketWatch = () => {
                     </div>
                   </div>
                   
-                    {/* BID Column - Red Soft Glass Pill Button */}
+                    {/* BID Column - Dynamic Color */}
                   <div className="text-center flex items-center justify-center relative z-10">
-                      <button
-                        className="rounded-full font-bold transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center overflow-hidden cursor-pointer"
+                      <span 
                         style={{
-                          background: 'linear-gradient(180deg, #C53030 0%, #9B2C2C 100%)',
-                          boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.2)',
-                          color: 'white',
-                          width: '115px',
-                          height: '44px',
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleSymbolClick(symbol);
+                          color: parseFloat(symbol.sell || 0) >= parseFloat(symbol.prevSell || symbol.sell || 0) ? '#10B981' : '#F43F5E',
+                          fontSize: '1.1rem',
+                          fontWeight: 700,
+                          fontVariantNumeric: 'tabular-nums',
+                          fontFamily: "'JetBrains Mono', 'Fira Code', 'SF Mono', 'Consolas', monospace",
+                          letterSpacing: '-0.02em',
+                          textShadow: parseFloat(symbol.sell || 0) >= parseFloat(symbol.prevSell || symbol.sell || 0) 
+                            ? '0 0 10px rgba(16, 185, 129, 0.3)' 
+                            : '0 0 10px rgba(244, 63, 94, 0.3)',
                         }}
                       >
-                        <span 
-                          className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2"
-                          style={{
-                            fontSize: bidDisplay && bidDisplay.length > 6 ? '0.85rem' : '1rem',
-                            fontVariantNumeric: 'tabular-nums',
-                            fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
-                          }}
-                        >
-                          {bidDisplay}
-                        </span>
-                      </button>
+                        {bidDisplay}
+                      </span>
                   </div>
                   
-                    {/* ASK Column - Green Soft Glass Pill Button */}
+                    {/* ASK Column - Dynamic Color */}
                   <div className="text-center flex items-center justify-center relative z-10">
-                      <button
-                        className="rounded-full font-bold transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center overflow-hidden cursor-pointer"
+                      <span 
                         style={{
-                          background: 'linear-gradient(180deg, #38A169 0%, #276749 100%)',
-                          boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.2)',
-                          color: 'white',
-                          width: '115px',
-                          height: '44px',
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleSymbolClick(symbol);
+                          color: parseFloat(symbol.buy || 0) >= parseFloat(symbol.prevBuy || symbol.buy || 0) ? '#10B981' : '#F43F5E',
+                          fontSize: '1.1rem',
+                          fontWeight: 700,
+                          fontVariantNumeric: 'tabular-nums',
+                          fontFamily: "'JetBrains Mono', 'Fira Code', 'SF Mono', 'Consolas', monospace",
+                          letterSpacing: '-0.02em',
+                          textShadow: parseFloat(symbol.buy || 0) >= parseFloat(symbol.prevBuy || symbol.buy || 0) 
+                            ? '0 0 10px rgba(16, 185, 129, 0.3)' 
+                            : '0 0 10px rgba(244, 63, 94, 0.3)',
                         }}
                       >
-                        <span 
-                          className="font-bold overflow-hidden text-ellipsis whitespace-nowrap block w-full text-center px-2"
-                          style={{
-                            fontSize: askDisplay && askDisplay.length > 6 ? '0.85rem' : '1rem',
-                            fontVariantNumeric: 'tabular-nums',
-                            fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
-                          }}
-                        >
-                          {askDisplay}
-                        </span>
-                      </button>
+                        {askDisplay}
+                      </span>
                   </div>
                   
                   {/* LTP Column - Numbers */}
@@ -1602,15 +1566,15 @@ const MarketWatch = () => {
               <div 
                 className="flex items-center justify-between"
                 style={{
-                  padding: '8px 14px',
+                  padding: '12px 16px',
                   borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                   background: 'rgba(15, 23, 42, 0.4)',
                 }}
               >
                 <div 
                   style={{
-                    fontSize: '0.65rem',
-                    color: 'rgba(148, 163, 184, 0.6)',
+                    fontSize: '0.75rem',
+                    color: 'rgba(148, 163, 184, 0.7)',
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
                     fontWeight: 600,
@@ -1618,15 +1582,15 @@ const MarketWatch = () => {
                 >
                   Symbol
                 </div>
-                <div className="flex" style={{ gap: '8px' }}>
+                <div className="flex" style={{ gap: '20px' }}>
                   <div 
                     style={{
-                      fontSize: '0.65rem',
-                      color: 'rgba(148, 163, 184, 0.6)',
+                      fontSize: '0.7rem',
+                      color: 'rgba(148, 163, 184, 0.8)',
                       textTransform: 'uppercase',
-                      letterSpacing: '0.06em',
+                      letterSpacing: '0.08em',
                       fontWeight: 600,
-                      width: '80px',
+                      width: '90px',
                       textAlign: 'center',
                     }}
                   >
@@ -1634,12 +1598,12 @@ const MarketWatch = () => {
                   </div>
                   <div 
                     style={{
-                      fontSize: '0.65rem',
-                      color: 'rgba(148, 163, 184, 0.6)',
+                      fontSize: '0.7rem',
+                      color: 'rgba(148, 163, 184, 0.8)',
                       textTransform: 'uppercase',
-                      letterSpacing: '0.06em',
+                      letterSpacing: '0.08em',
                       fontWeight: 600,
-                      width: '80px',
+                      width: '90px',
                       textAlign: 'center',
                     }}
                   >
@@ -1733,7 +1697,8 @@ const MarketWatch = () => {
                   onClick={() => handleSymbolClick(symbol)}
                   style={{
                     borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-                    padding: '10px 14px',
+                    padding: '14px 16px',
+                    minHeight: '70px',
                   }}
                 >
                   <div className="flex items-center justify-between">
@@ -1742,15 +1707,15 @@ const MarketWatch = () => {
                       // If symbol is long (>12 chars), move date to second line
                       const isLongSymbol = symbolDisplay.length > 12;
                       return (
-                        <div className="flex-1 min-w-0 pr-2">
+                        <div className="flex-1 min-w-0 pr-3">
                           {/* Symbol Name with Date (only if short symbol) */}
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-2">
                             <span 
                               className="font-bold text-white"
                               style={{
-                                fontSize: '1rem',
+                                fontSize: '1.1rem',
                                 letterSpacing: '-0.01em',
-                                lineHeight: 1.2,
+                                lineHeight: 1.3,
                               }}
                             >
                               {symbolDisplay}
@@ -1758,7 +1723,7 @@ const MarketWatch = () => {
                             {formattedDate && !isLongSymbol && (
                               <span 
                                 style={{
-                                  fontSize: '0.6rem',
+                                  fontSize: '0.7rem',
                                   color: 'rgba(96, 165, 250, 0.9)',
                                   fontWeight: 500,
                                   whiteSpace: 'nowrap',
@@ -1771,9 +1736,9 @@ const MarketWatch = () => {
                           
                           {/* Exchange, Lot Info, and Date (only if long symbol) */}
                           <div 
-                            className="flex items-center gap-1.5 mt-0.5"
+                            className="flex items-center gap-2 mt-1"
                             style={{
-                              fontSize: '0.7rem',
+                              fontSize: '0.75rem',
                               color: 'rgba(148, 163, 184, 0.7)',
                             }}
                           >
@@ -1793,50 +1758,40 @@ const MarketWatch = () => {
                       );
                     })()}
                     
-                    {/* Right Section: Two Price Glass Capsules */}
-                    <div className="flex flex-shrink-0" style={{ gap: '8px' }}>
-                      {/* BID - Red Glass Capsule */}
-                      <div 
-                        className="rounded-full flex items-center justify-center"
-                        style={{
-                          background: 'linear-gradient(180deg, #C53030 0%, #9B2C2C 100%)',
-                          boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.2)',
-                          width: '80px',
-                          height: '32px',
-                        }}
-                      >
+                    {/* Right Section: Two Price Values - Dynamic Colors */}
+                    <div className="flex flex-shrink-0" style={{ gap: '20px' }}>
+                      {/* BID - Dynamic Color */}
+                      <div style={{ width: '90px', textAlign: 'center' }}>
                         <span 
-                          className="font-semibold text-center"
                           style={{
-                            color: 'white',
-                            fontSize: '0.8rem',
+                            color: parseFloat(symbol.sell || 0) >= parseFloat(symbol.prevSell || symbol.sell || 0) ? '#10B981' : '#F43F5E',
+                            fontSize: '1.05rem',
+                            fontWeight: 700,
                             fontVariantNumeric: 'tabular-nums',
-                            fontFamily: "'SF Mono', 'Consolas', 'Monaco', monospace",
-                            letterSpacing: '-0.02em',
+                            fontFamily: "'JetBrains Mono', 'Fira Code', 'SF Mono', 'Consolas', monospace",
+                            letterSpacing: '-0.03em',
+                            textShadow: parseFloat(symbol.sell || 0) >= parseFloat(symbol.prevSell || symbol.sell || 0) 
+                              ? '0 0 8px rgba(16, 185, 129, 0.4)' 
+                              : '0 0 8px rgba(244, 63, 94, 0.4)',
                           }}
                         >
                           {bidDisplay}
                         </span>
                       </div>
                       
-                      {/* ASK - Green Glass Capsule */}
-                      <div 
-                        className="rounded-full flex items-center justify-center"
-                        style={{
-                          background: 'linear-gradient(180deg, #38A169 0%, #276749 100%)',
-                          boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.2)',
-                          width: '80px',
-                          height: '32px',
-                        }}
-                      >
+                      {/* ASK - Dynamic Color */}
+                      <div style={{ width: '90px', textAlign: 'center' }}>
                         <span 
-                          className="font-semibold text-center"
                           style={{
-                            color: 'white',
-                            fontSize: '0.8rem',
+                            color: parseFloat(symbol.buy || 0) >= parseFloat(symbol.prevBuy || symbol.buy || 0) ? '#10B981' : '#F43F5E',
+                            fontSize: '1.05rem',
+                            fontWeight: 700,
                             fontVariantNumeric: 'tabular-nums',
-                            fontFamily: "'SF Mono', 'Consolas', 'Monaco', monospace",
-                            letterSpacing: '-0.02em',
+                            fontFamily: "'JetBrains Mono', 'Fira Code', 'SF Mono', 'Consolas', monospace",
+                            letterSpacing: '-0.03em',
+                            textShadow: parseFloat(symbol.buy || 0) >= parseFloat(symbol.prevBuy || symbol.buy || 0) 
+                              ? '0 0 8px rgba(16, 185, 129, 0.4)' 
+                              : '0 0 8px rgba(244, 63, 94, 0.4)',
                           }}
                         >
                           {askDisplay}
@@ -2202,8 +2157,10 @@ const MarketWatch = () => {
       
       {/* Premium Custom Styles */}
       <style>{`
-        /* Import Inter Font */
+        /* Import Inter and JetBrains Mono Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap');
         
         /* Global Typography System */
         * {

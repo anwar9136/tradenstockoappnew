@@ -237,12 +237,6 @@ const Login = () => {
     }
   };
 
-  // Live ticker data for social proof
-  const tickerData = [
-    { symbol: 'BTC', change: '+2.4%', color: 'text-green-400' },
-    { symbol: 'ETH', change: '+1.8%', color: 'text-green-400' },
-    { symbol: 'SPY', change: '+0.3%', color: 'text-green-400' },
-  ];
 
   return (
     <div className="min-h-screen bg-[#02050a] relative overflow-hidden">
@@ -357,18 +351,6 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Social Proof - Live Tickers */}
-          <div className="flex items-center space-x-6 text-sm">
-            <span className="text-slate-400 text-xs uppercase tracking-wider">Live Markets</span>
-            <div className="flex items-center space-x-4">
-              {tickerData.map((item, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                  <span className="text-white font-semibold">{item.symbol}</span>
-                  <span className={`font-mono ${item.color}`}>{item.change}</span>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Right Side (40% - Focus Side) - Glass Card */}
