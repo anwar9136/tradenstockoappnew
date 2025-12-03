@@ -79,6 +79,7 @@ const MarketWatch = () => {
   const updateCountRef = useRef(0);
   const searchTimeoutRef = useRef(null);
   const exchangeRateIntervalRef = useRef(null);
+  const optionsPollIntervalRef = useRef(null); // Polling for Options tab (WebSocket doesn't support NSE Options)
   const scrollContainerRef = useRef(null);
   const tabsContainerRef = useRef(null);
   const tabRefs = useRef({});
@@ -162,6 +163,9 @@ const MarketWatch = () => {
       if (exchangeRateIntervalRef.current) {
         clearInterval(exchangeRateIntervalRef.current);
       }
+      if (optionsPollIntervalRef.current) {
+        clearInterval(optionsPollIntervalRef.current);
+      }
       // WebSocket cleanup is handled by the shared service
     };
   }, [fetchExchangeRate]);
@@ -238,6 +242,11 @@ const MarketWatch = () => {
     const { Symbol, BestBid, BestAsk, Bids, Asks } = tickData.data;
     
     if (!Symbol) return;
+    
+    // Debug: Log first few FX tick symbols to verify WebSocket is receiving data
+    if (updateCountRef.current < 5) {
+      console.log('FX WebSocket tick received:', Symbol, 'BestBid:', BestBid?.Price, 'BestAsk:', BestAsk?.Price);
+    }
 
     // Get USD prices from tick data
     const bestBidPriceUSD = BestBid?.Price || 0;
@@ -270,13 +279,25 @@ const MarketWatch = () => {
     setMarketData(prev => {
       const newData = { ...prev };
       let updated = false;
+      let matchFound = false;
       
       // Search through current tab's tokens to find matching symbol
       if (newData[activeTab] && Array.isArray(newData[activeTab])) {
+        // Debug: Log available symbols once
+        if (updateCountRef.current < 3) {
+          const availableSymbols = newData[activeTab].map(t => t.SymbolName?.split('_')[0] || t.SymbolName);
+          console.log(`FX Tab: ${activeTab}, Looking for: "${Symbol}", Available symbols:`, availableSymbols.slice(0, 5));
+        }
+        
         newData[activeTab] = newData[activeTab].map(token => {
           // Match by SymbolName (the Symbol from tick data should match SymbolName)
           const symbolName = token.SymbolName?.split('_')[0] || token.SymbolName;
-          if (symbolName === Symbol || token.SymbolName === Symbol) {
+          // Also try matching without any suffix and case-insensitive
+          const symbolNameClean = symbolName?.toUpperCase().replace(/[^A-Z0-9]/g, '');
+          const tickSymbolClean = Symbol?.toUpperCase().replace(/[^A-Z0-9]/g, '');
+          
+          if (symbolName === Symbol || token.SymbolName === Symbol || symbolNameClean === tickSymbolClean) {
+            matchFound = true;
             // Calculate LTP in USD (midpoint of best bid/ask)
             const ltpUSD = bestBidPriceUSD && bestAskPriceUSD ? (bestBidPriceUSD + bestAskPriceUSD) / 2 : (bestBidPriceUSD || bestAskPriceUSD || 0);
             
@@ -359,6 +380,101 @@ const MarketWatch = () => {
     handleWebSocketMessage,
     isFX // Use FX WebSocket for Crypto/Forex/Commodity
   );
+
+  // Poll Options data (WebSocket doesn't support NSE Options tokens)
+  const pollOptionsData = useCallback(async () => {
+    if (!mountedRef.current || activeTab !== 'OPT') return;
+    
+    const currentSymbols = marketData['OPT'];
+    if (!currentSymbols || currentSymbols.length === 0) return;
+
+    try {
+      // Fetch fresh data for each Options token
+      const tokenIds = currentSymbols.map(s => s.SymbolToken).filter(Boolean);
+      if (tokenIds.length === 0) return;
+
+      // Fetch data for all tokens in parallel
+      const promises = tokenIds.map(token => 
+        tradingAPI.getSingleMarketData(token).catch(() => null)
+      );
+      
+      const results = await Promise.all(promises);
+      
+      if (!mountedRef.current) return;
+
+      setMarketData(prev => {
+        const newData = { ...prev };
+        if (!newData['OPT']) return prev;
+
+        let updated = false;
+        newData['OPT'] = newData['OPT'].map((symbol, index) => {
+          const data = results[index];
+          if (!data || !data.instrument_token) return symbol;
+
+          const bid = data.bid === "0" || data.bid === 0 ? data.last_price : data.bid;
+          const ask = data.ask === "0" || data.ask === 0 ? data.last_price : data.ask;
+          
+          // Check if values actually changed
+          const newSell = parseFloat(bid || symbol.sell || 0);
+          const newBuy = parseFloat(ask || symbol.buy || 0);
+          const newLtp = parseFloat(data.last_price || symbol.ltp || 0);
+          
+          if (newSell !== symbol.sell || newBuy !== symbol.buy || newLtp !== symbol.ltp) {
+            updated = true;
+            return {
+              ...symbol,
+              prevSell: symbol.sell,
+              prevBuy: symbol.buy,
+              prevLtp: symbol.ltp,
+              sell: newSell,
+              buy: newBuy,
+              ltp: newLtp,
+              high: parseFloat(data.high || symbol.high || 0),
+              low: parseFloat(data.low || symbol.low || 0),
+              open: parseFloat(data.open || symbol.open || 0),
+              close: parseFloat(data.close || symbol.close || 0),
+              volume: data.volume || symbol.volume,
+              oi: data.oi || symbol.oi,
+            };
+          }
+          return symbol;
+        });
+
+        if (updated) {
+          setLastUpdate(Date.now());
+          return newData;
+        }
+        return prev;
+      });
+    } catch (error) {
+      console.error('Error polling Options data:', error);
+    }
+  }, [activeTab, marketData]);
+
+  // Start/stop Options polling based on active tab
+  useEffect(() => {
+    // Clear any existing interval
+    if (optionsPollIntervalRef.current) {
+      clearInterval(optionsPollIntervalRef.current);
+      optionsPollIntervalRef.current = null;
+    }
+
+    // Start polling only for Options tab
+    if (activeTab === 'OPT' && marketData['OPT']?.length > 0) {
+      console.log('Starting Options polling (WebSocket not supported for NSE Options)');
+      // Poll every 2 seconds
+      optionsPollIntervalRef.current = setInterval(pollOptionsData, 2000);
+      // Also poll immediately
+      pollOptionsData();
+    }
+
+    return () => {
+      if (optionsPollIntervalRef.current) {
+        clearInterval(optionsPollIntervalRef.current);
+        optionsPollIntervalRef.current = null;
+      }
+    };
+  }, [activeTab, marketData['OPT']?.length, pollOptionsData]);
 
   // Initial load
   useEffect(() => {

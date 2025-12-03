@@ -854,7 +854,7 @@ const Profile = () => {
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
       }}>
-        <div className="bg-app-surface/80 border-t border-app-border/50 px-1 sm:px-2 py-2 sm:py-3" style={{
+        <div className="bg-app-surface/80 border-t border-app-border/50 px-2 sm:px-2 py-3 sm:py-3" style={{
           boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
         }}>
           <div className="flex justify-around items-center">
@@ -862,7 +862,7 @@ const Profile = () => {
               <button
                 key={item.id}
                 onClick={() => handleTabClick(item.id)}
-                className={`flex flex-col items-center py-1.5 px-2 sm:py-2 sm:px-4 rounded-xl transition-all duration-200 ${
+                className={`flex flex-col items-center py-2 px-3 sm:py-2 sm:px-4 rounded-xl transition-all duration-200 ${
                   item.id === 'profile' ? 'bg-app-blue/10' : ''
                 }`}
                 style={{
@@ -870,11 +870,11 @@ const Profile = () => {
                 }}
               >
                 <item.icon 
-                  className={`w-5 h-5 sm:w-7 sm:h-7 mb-0.5 sm:mb-1 transition-colors ${
+                  className={`w-6 h-6 sm:w-7 sm:h-7 mb-1 sm:mb-1 transition-colors ${
                     item.id === 'profile' ? 'text-app-blue' : 'text-app-text-tertiary'
                   }`}
                 />
-                <span className={`text-[10px] sm:text-xs font-medium transition-colors ${
+                <span className={`text-xs sm:text-xs font-medium transition-colors ${
                   item.id === 'profile' ? 'text-app-blue' : 'text-app-text-tertiary'
                 }`}>
                   {item.label}
