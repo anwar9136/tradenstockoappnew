@@ -1085,7 +1085,7 @@ const MarketWatch = () => {
                     borderColor: 'rgba(148, 163, 184, 0.2)',
                   }}
                 >
-                  <div className="grid grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_0.8fr_1fr] gap-5 relative z-10" style={{ 
+                  <div className={`grid ${['CRYPTO', 'FOREX', 'COMMODITY'].includes(activeTab) ? 'grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr]' : 'grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_0.8fr_1fr]'} gap-5 relative z-10`} style={{ 
                     fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
                     fontSize: '12px',
                     fontWeight: 600,
@@ -1103,7 +1103,7 @@ const MarketWatch = () => {
                     <div className="text-center">LOW</div>
                     <div className="text-center">OPEN</div>
                     <div className="text-center">CLOSE</div>
-                    <div className="text-center">OI</div>
+                    {!['CRYPTO', 'FOREX', 'COMMODITY'].includes(activeTab) && <div className="text-center">OI</div>}
                     <div className="text-center">VOL</div>
                   </div>
                 </div>
@@ -1242,7 +1242,7 @@ const MarketWatch = () => {
               return (
                 <div
                   key={symbol.SymbolToken}
-                  className="mb-3 sm:mb-0 rounded-xl sm:rounded-none bg-app-surface/40 border sm:border-0 sm:border-b sm:grid sm:grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_0.8fr_1fr] sm:gap-5 px-4 sm:px-5 py-4 sm:py-3.5 transition-all duration-200 cursor-pointer group touch-manipulation relative"
+                  className={`mb-3 sm:mb-0 rounded-xl sm:rounded-none bg-app-surface/40 border sm:border-0 sm:border-b sm:grid ${isFXTab ? 'sm:grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr]' : 'sm:grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_0.8fr_1fr]'} sm:gap-5 px-4 sm:px-5 py-4 sm:py-3.5 transition-all duration-200 cursor-pointer group touch-manipulation relative`}
                   onClick={() => handleSymbolClick(symbol)}
                   style={{
                     fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
@@ -1558,20 +1558,22 @@ const MarketWatch = () => {
                     </span>
                   </div>
                   
-                  {/* OI Column - Larger Numbers */}
-                  <div className="hidden sm:flex text-center items-center justify-center relative z-10">
-                    <span className="text-base whitespace-nowrap truncate font-semibold" style={{ 
-                      fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
-                      fontWeight: 600,
-                      fontSize: '1rem',
-                      color: '#94A3B8',
-                      letterSpacing: '-0.01em',
-                      fontVariantNumeric: 'tabular-nums',
-                      textRendering: 'optimizeLegibility',
-                    }}>
-                      {oiDisplay}
-                    </span>
-                  </div>
+                  {/* OI Column - Larger Numbers (Hidden for Crypto/Forex/Commodity) */}
+                  {!isFXTab && (
+                    <div className="hidden sm:flex text-center items-center justify-center relative z-10">
+                      <span className="text-base whitespace-nowrap truncate font-semibold" style={{ 
+                        fontFamily: "'SF Mono', 'Consolas', 'Monaco', 'Courier New', monospace",
+                        fontWeight: 600,
+                        fontSize: '1rem',
+                        color: '#94A3B8',
+                        letterSpacing: '-0.01em',
+                        fontVariantNumeric: 'tabular-nums',
+                        textRendering: 'optimizeLegibility',
+                      }}>
+                        {oiDisplay}
+                      </span>
+                    </div>
+                  )}
                   
                   {/* VOLUME Column - Larger Numbers */}
                   <div className="hidden sm:flex text-center items-center justify-center relative z-10">

@@ -1396,8 +1396,8 @@ const OrderModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-2">
-      <div className="bg-gray-800 rounded-lg w-full max-w-sm max-h-[95vh] overflow-hidden flex flex-col">
+    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-start justify-center z-50 p-2 pt-10 pb-20 sm:pt-8 sm:pb-16">
+      <div className="bg-gray-800 rounded-lg w-full max-w-sm max-h-[85vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="flex justify-between items-center p-3 border-b border-gray-700">
           <h3 className="text-lg font-semibold text-white">Place Order</h3>
