@@ -1183,48 +1183,39 @@ const MarketWatch = () => {
                 const exchangeType = symbol.ExchangeType || activeTab;
                 const symbolName = symbol.SymbolName || '';
                 const ltpPrice = parseFloat(symbol.ltpUSD || symbol.ltp || 0);
-                const chgPrice = parseFloat(symbol.chgUSD !== undefined ? symbol.chgUSD : symbol.chg || 0);
                 const highPrice = parseFloat(symbol.high || 0);
                 const lowPrice = parseFloat(symbol.low || 0);
                 const openPrice = parseFloat(symbol.open || 0);
                 const closePrice = parseFloat(symbol.closeUSD || symbol.close || 0);
                 
-                // Validate change value - very strict validation
-                const absChg = Math.abs(chgPrice);
-                // Must have valid close price to calculate percentage properly
-                const hasValidClose = closePrice > 0 && ltpPrice > 0;
-                const isReasonableAbsolute = absChg < 50; // USD change shouldn't exceed 50
-                const isReasonablePercent = hasValidClose ? (absChg / closePrice) < 0.1 : false; // <10% change from close
-                const isReasonableChange = hasValidClose && isReasonableAbsolute && isReasonablePercent;
+                // Calculate change from LTP - Close (actual day change in USD)
+                const chgPrice = (ltpPrice > 0 && closePrice > 0) ? (ltpPrice - closePrice) : 0;
                 
                 ltpDisplay = ltpPrice > 0 ? formatFXPrice(ltpPrice, exchangeType, symbolName) : '-';
-                chgDisplay = (chgPrice !== 0 && isReasonableChange) ? (chgPrice > 0 ? '+' : '') + formatFXPrice(chgPrice, exchangeType, symbolName) : '-';
+                chgDisplay = chgPrice !== 0 ? (chgPrice > 0 ? '+' : '') + formatFXPrice(chgPrice, exchangeType, symbolName) : '-';
                 highDisplay = highPrice > 0 ? formatFXPrice(highPrice, exchangeType, symbolName) : '-';
                 lowDisplay = lowPrice > 0 ? formatFXPrice(lowPrice, exchangeType, symbolName) : '-';
                 openDisplay = openPrice > 0 ? formatFXPrice(openPrice, exchangeType, symbolName) : '-';
                 closeDisplay = closePrice > 0 ? formatFXPrice(closePrice, exchangeType, symbolName) : '-';
               } else {
                 const ltpPrice = parseFloat(symbol.ltp || 0);
-                const chgPrice = parseFloat(symbol.chg || 0);
                 const highPrice = parseFloat(symbol.high || 0);
                 const lowPrice = parseFloat(symbol.low || 0);
                 const openPrice = parseFloat(symbol.open || 0);
                 const closePrice = parseFloat(symbol.close || 0);
                 
-                // Validate change value - very strict validation
-                const absChg = Math.abs(chgPrice);
-                // Must have valid close price to calculate percentage properly
-                const hasValidClose = closePrice > 0 && ltpPrice > 0;
-                const isReasonableAbsolute = absChg < 500; // INR change shouldn't exceed 500
-                const isReasonablePercent = hasValidClose ? (absChg / closePrice) < 0.1 : false; // <10% change from close
-                const isReasonableChange = hasValidClose && isReasonableAbsolute && isReasonablePercent;
+                // Calculate change from LTP - Close (actual day change)
+                const chgPrice = (ltpPrice > 0 && closePrice > 0) ? (ltpPrice - closePrice) : 0;
                 
-                ltpDisplay = ltpPrice > 0 ? ltpPrice.toString() : '-';
-                chgDisplay = (chgPrice !== 0 && isReasonableChange) ? (chgPrice > 0 ? '+' : '') + chgPrice.toString() : '-';
-                highDisplay = highPrice > 0 ? highPrice.toString() : '-';
-                lowDisplay = lowPrice > 0 ? lowPrice.toString() : '-';
-                openDisplay = openPrice > 0 ? openPrice.toString() : '-';
-                closeDisplay = closePrice > 0 ? closePrice.toString() : '-';
+                // Format change to 2 decimal places
+                const formattedChg = chgPrice !== 0 ? chgPrice.toFixed(2) : '0.00';
+                
+                ltpDisplay = ltpPrice > 0 ? ltpPrice.toFixed(2) : '-';
+                chgDisplay = chgPrice !== 0 ? (chgPrice > 0 ? '+' : '') + formattedChg : '-';
+                highDisplay = highPrice > 0 ? highPrice.toFixed(2) : '-';
+                lowDisplay = lowPrice > 0 ? lowPrice.toFixed(2) : '-';
+                openDisplay = openPrice > 0 ? openPrice.toFixed(2) : '-';
+                closeDisplay = closePrice > 0 ? closePrice.toFixed(2) : '-';
               }
               
               const oiValue = parseFloat(symbol.oi || 0);
@@ -1232,8 +1223,13 @@ const MarketWatch = () => {
               oiDisplay = oiValue > 0 ? oiValue.toLocaleString() : '-';
               volumeDisplay = volumeValue > 0 ? volumeValue.toLocaleString() : '-';
               
+              // Calculate actual change for color (LTP - Close)
+              const ltpForColor = isFXTab ? parseFloat(symbol.ltpUSD || symbol.ltp || 0) : parseFloat(symbol.ltp || 0);
+              const closeForColor = isFXTab ? parseFloat(symbol.closeUSD || symbol.close || 0) : parseFloat(symbol.close || 0);
+              const actualChange = (ltpForColor > 0 && closeForColor > 0) ? (ltpForColor - closeForColor) : 0;
+              
               // Determine color for CHG based on positive/negative - Premium Emerald/Rose
-              const chgColor = parseFloat(symbol.chg || 0) >= 0 
+              const chgColor = actualChange >= 0 
                 ? 'linear-gradient(to bottom right, #059669, #10B981)' 
                 : 'linear-gradient(to bottom right, #DC2626, #EF4444)';
               
@@ -1566,7 +1562,7 @@ const MarketWatch = () => {
               <div 
                 className="flex items-center justify-between"
                 style={{
-                  padding: '12px 16px',
+                  padding: '12px 12px 12px 14px',
                   borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                   background: 'rgba(15, 23, 42, 0.4)',
                 }}
@@ -1582,15 +1578,15 @@ const MarketWatch = () => {
                 >
                   Symbol
                 </div>
-                <div className="flex" style={{ gap: '20px' }}>
+                <div className="flex" style={{ gap: '16px' }}>
                   <div 
                     style={{
-                      fontSize: '0.7rem',
+                      fontSize: '0.65rem',
                       color: 'rgba(148, 163, 184, 0.8)',
                       textTransform: 'uppercase',
                       letterSpacing: '0.08em',
                       fontWeight: 600,
-                      width: '90px',
+                      width: '85px',
                       textAlign: 'center',
                     }}
                   >
@@ -1598,12 +1594,12 @@ const MarketWatch = () => {
                   </div>
                   <div 
                     style={{
-                      fontSize: '0.7rem',
+                      fontSize: '0.65rem',
                       color: 'rgba(148, 163, 184, 0.8)',
                       textTransform: 'uppercase',
                       letterSpacing: '0.08em',
                       fontWeight: 600,
-                      width: '90px',
+                      width: '85px',
                       textAlign: 'center',
                     }}
                   >
@@ -1697,7 +1693,7 @@ const MarketWatch = () => {
                   onClick={() => handleSymbolClick(symbol)}
                   style={{
                     borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-                    padding: '14px 16px',
+                    padding: '14px 12px 14px 14px',
                     minHeight: '70px',
                   }}
                 >
@@ -1707,7 +1703,7 @@ const MarketWatch = () => {
                       // If symbol is long (>12 chars), move date to second line
                       const isLongSymbol = symbolDisplay.length > 12;
                       return (
-                        <div className="flex-1 min-w-0 pr-3">
+                        <div className="flex-1 min-w-0 pr-4">
                           {/* Symbol Name with Date (only if short symbol) */}
                           <div className="flex items-center gap-2">
                             <span 
@@ -1759,20 +1755,20 @@ const MarketWatch = () => {
                     })()}
                     
                     {/* Right Section: Two Price Values - Dynamic Colors */}
-                    <div className="flex flex-shrink-0" style={{ gap: '20px' }}>
+                    <div className="flex flex-shrink-0" style={{ gap: '16px' }}>
                       {/* BID - Dynamic Color */}
-                      <div style={{ width: '90px', textAlign: 'center' }}>
+                      <div style={{ width: '85px', textAlign: 'center' }}>
                         <span 
                           style={{
                             color: parseFloat(symbol.sell || 0) >= parseFloat(symbol.prevSell || symbol.sell || 0) ? '#10B981' : '#F43F5E',
-                            fontSize: '1.05rem',
+                            fontSize: '0.9rem',
                             fontWeight: 700,
                             fontVariantNumeric: 'tabular-nums',
                             fontFamily: "'JetBrains Mono', 'Fira Code', 'SF Mono', 'Consolas', monospace",
-                            letterSpacing: '-0.03em',
+                            letterSpacing: '-0.02em',
                             textShadow: parseFloat(symbol.sell || 0) >= parseFloat(symbol.prevSell || symbol.sell || 0) 
-                              ? '0 0 8px rgba(16, 185, 129, 0.4)' 
-                              : '0 0 8px rgba(244, 63, 94, 0.4)',
+                              ? '0 0 6px rgba(16, 185, 129, 0.35)' 
+                              : '0 0 6px rgba(244, 63, 94, 0.35)',
                           }}
                         >
                           {bidDisplay}
@@ -1780,18 +1776,18 @@ const MarketWatch = () => {
                       </div>
                       
                       {/* ASK - Dynamic Color */}
-                      <div style={{ width: '90px', textAlign: 'center' }}>
+                      <div style={{ width: '85px', textAlign: 'center' }}>
                         <span 
                           style={{
                             color: parseFloat(symbol.buy || 0) >= parseFloat(symbol.prevBuy || symbol.buy || 0) ? '#10B981' : '#F43F5E',
-                            fontSize: '1.05rem',
+                            fontSize: '0.9rem',
                             fontWeight: 700,
                             fontVariantNumeric: 'tabular-nums',
                             fontFamily: "'JetBrains Mono', 'Fira Code', 'SF Mono', 'Consolas', monospace",
-                            letterSpacing: '-0.03em',
+                            letterSpacing: '-0.02em',
                             textShadow: parseFloat(symbol.buy || 0) >= parseFloat(symbol.prevBuy || symbol.buy || 0) 
-                              ? '0 0 8px rgba(16, 185, 129, 0.4)' 
-                              : '0 0 8px rgba(244, 63, 94, 0.4)',
+                              ? '0 0 6px rgba(16, 185, 129, 0.35)' 
+                              : '0 0 6px rgba(244, 63, 94, 0.35)',
                           }}
                         >
                           {askDisplay}
