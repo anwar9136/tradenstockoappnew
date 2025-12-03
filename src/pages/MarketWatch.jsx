@@ -1746,7 +1746,7 @@ const MarketWatch = () => {
                             <span 
                               className="font-semibold text-white"
                               style={{
-                                fontSize: '0.9rem',
+                                fontSize: '1rem',
                                 letterSpacing: '-0.01em',
                                 lineHeight: 1.2,
                               }}
@@ -1769,18 +1769,18 @@ const MarketWatch = () => {
                           
                           {/* Exchange, Lot Info, and Date (only if long symbol) */}
                           <div 
-                            className="flex items-center gap-1 mt-0.5"
+                            className="flex items-center gap-1.5 mt-0.5"
                             style={{
-                              fontSize: '0.6rem',
-                              color: 'rgba(148, 163, 184, 0.5)',
+                              fontSize: '0.7rem',
+                              color: 'rgba(148, 163, 184, 0.7)',
                             }}
                           >
                             <span>{symbol.ExchangeType || activeTab}</span>
-                            <span style={{ color: 'rgba(148, 163, 184, 0.25)' }}>•</span>
+                            <span style={{ color: 'rgba(148, 163, 184, 0.4)' }}>•</span>
                             <span>Lot: {symbol.Lotsize || 1}</span>
                             {formattedDate && isLongSymbol && (
                               <>
-                                <span style={{ color: 'rgba(148, 163, 184, 0.25)' }}>•</span>
+                                <span style={{ color: 'rgba(148, 163, 184, 0.4)' }}>•</span>
                                 <span style={{ color: 'rgba(96, 165, 250, 0.9)', fontWeight: 500 }}>
                                   {formattedDate}
                                 </span>
