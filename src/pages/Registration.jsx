@@ -569,13 +569,13 @@ const Registration = () => {
   );
 
   const renderStep3 = () => (
-    <div className={`space-y-3 sm:space-y-4 transition-all duration-[400ms] ease-in-out ${stepTransition ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+    <div className={`space-y-2 sm:space-y-4 transition-all duration-[400ms] ease-in-out ${stepTransition ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+      <div className="grid grid-cols-2 gap-2 sm:gap-4">
         <div className="relative">
           <label 
-            className="block mb-2"
+            className="block mb-1 sm:mb-2"
             style={{
-              fontSize: '11px',
+              fontSize: '10px',
               textTransform: 'uppercase',
               fontWeight: 'bold',
               letterSpacing: '1.5px',
@@ -592,7 +592,7 @@ const Registration = () => {
             onKeyDown={() => handleKeyDown('firstName')}
             onFocus={() => setFocusedField('firstName')}
             onBlur={() => setFocusedField(null)}
-            className="w-full pl-3 sm:pl-4 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg transition-all duration-300 text-white font-medium focus:outline-none registration-input text-sm sm:text-base"
+            className="w-full pl-3 sm:pl-4 pr-3 sm:pr-4 py-2 sm:py-3 rounded-lg transition-all duration-300 text-white font-medium focus:outline-none registration-input text-sm sm:text-base"
             style={{
               background: focusedField === 'firstName' ? 'rgba(30, 58, 138, 0.3)' : 'rgba(0, 0, 0, 0.5)',
               border: typingFlash === 'firstName' 
@@ -613,9 +613,9 @@ const Registration = () => {
         </div>
         <div className="relative">
           <label 
-            className="block mb-2"
+            className="block mb-1 sm:mb-2"
             style={{
-              fontSize: '11px',
+              fontSize: '10px',
               textTransform: 'uppercase',
               fontWeight: 'bold',
               letterSpacing: '1.5px',
@@ -632,7 +632,7 @@ const Registration = () => {
             onKeyDown={() => handleKeyDown('lastName')}
             onFocus={() => setFocusedField('lastName')}
             onBlur={() => setFocusedField(null)}
-            className="w-full pl-3 sm:pl-4 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg transition-all duration-300 text-white font-medium focus:outline-none registration-input text-sm sm:text-base"
+            className="w-full pl-3 sm:pl-4 pr-3 sm:pr-4 py-2 sm:py-3 rounded-lg transition-all duration-300 text-white font-medium focus:outline-none registration-input text-sm sm:text-base"
             style={{
               background: focusedField === 'lastName' ? 'rgba(30, 58, 138, 0.3)' : 'rgba(0, 0, 0, 0.5)',
               border: typingFlash === 'lastName' 
@@ -655,9 +655,9 @@ const Registration = () => {
 
       <div className="relative">
         <label 
-          className="block mb-2"
+          className="block mb-1 sm:mb-2"
           style={{
-            fontSize: '11px',
+            fontSize: '10px',
             textTransform: 'uppercase',
             fontWeight: 'bold',
             letterSpacing: '1.5px',
@@ -674,7 +674,7 @@ const Registration = () => {
           onKeyDown={() => handleKeyDown('email')}
           onFocus={() => setFocusedField('email')}
           onBlur={() => setFocusedField(null)}
-          className="w-full pl-3 sm:pl-4 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg transition-all duration-300 text-white font-medium focus:outline-none registration-input text-sm sm:text-base"
+          className="w-full pl-3 sm:pl-4 pr-3 sm:pr-4 py-2 sm:py-3 rounded-lg transition-all duration-300 text-white font-medium focus:outline-none registration-input text-sm sm:text-base"
           style={{
             background: focusedField === 'email' ? 'rgba(30, 58, 138, 0.3)' : 'rgba(0, 0, 0, 0.5)',
             border: typingFlash === 'email' 
@@ -695,9 +695,9 @@ const Registration = () => {
 
       <div className="relative">
         <label 
-          className="block mb-2"
+          className="block mb-1 sm:mb-2"
           style={{
-            fontSize: '11px',
+            fontSize: '10px',
             textTransform: 'uppercase',
             fontWeight: 'bold',
             letterSpacing: '1.5px',
@@ -717,7 +717,7 @@ const Registration = () => {
             setFocusedField(null);
             checkUsername(e.target.value);
           }}
-          className="w-full pl-3 sm:pl-4 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg transition-all duration-300 text-white font-medium focus:outline-none registration-input text-sm sm:text-base"
+          className="w-full pl-3 sm:pl-4 pr-3 sm:pr-4 py-2 sm:py-3 rounded-lg transition-all duration-300 text-white font-medium focus:outline-none registration-input text-sm sm:text-base"
           style={{
             background: focusedField === 'username' ? 'rgba(30, 58, 138, 0.3)' : 'rgba(0, 0, 0, 0.5)',
             border: typingFlash === 'username' 
@@ -740,9 +740,9 @@ const Registration = () => {
 
       <div className="relative">
         <label 
-          className="block mb-2"
+          className="block mb-1 sm:mb-2"
           style={{
-            fontSize: '11px',
+            fontSize: '10px',
             textTransform: 'uppercase',
             fontWeight: 'bold',
             letterSpacing: '1.5px',
@@ -759,7 +759,7 @@ const Registration = () => {
           onKeyDown={() => handleKeyDown('password')}
           onFocus={() => setFocusedField('password')}
           onBlur={() => setFocusedField(null)}
-          className="w-full pl-3 sm:pl-4 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg transition-all duration-300 text-white font-medium focus:outline-none registration-input text-sm sm:text-base"
+          className="w-full pl-3 sm:pl-4 pr-3 sm:pr-4 py-2 sm:py-3 rounded-lg transition-all duration-300 text-white font-medium focus:outline-none registration-input text-sm sm:text-base"
           style={{
             background: focusedField === 'password' ? 'rgba(30, 58, 138, 0.3)' : 'rgba(0, 0, 0, 0.5)',
             border: typingFlash === 'password' 
@@ -781,9 +781,9 @@ const Registration = () => {
 
       <div className="relative">
         <label 
-          className="block mb-2"
+          className="block mb-1 sm:mb-2"
           style={{
-            fontSize: '11px',
+            fontSize: '10px',
             textTransform: 'uppercase',
             fontWeight: 'bold',
             letterSpacing: '1.5px',
@@ -798,7 +798,7 @@ const Registration = () => {
           onChange={handleInputChange}
           onFocus={() => setFocusedField('language')}
           onBlur={() => setFocusedField(null)}
-          className="w-full pl-3 sm:pl-4 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg transition-all duration-300 text-white font-medium focus:outline-none registration-input text-sm sm:text-base"
+          className="w-full pl-3 sm:pl-4 pr-3 sm:pr-4 py-2 sm:py-3 rounded-lg transition-all duration-300 text-white font-medium focus:outline-none registration-input text-sm sm:text-base"
           style={{
             background: focusedField === 'language' ? 'rgba(30, 58, 138, 0.3)' : 'rgba(0, 0, 0, 0.5)',
             border: focusedField === 'language' ? '1px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.05)',
@@ -820,7 +820,7 @@ const Registration = () => {
       <button
         onClick={goToPart2}
         disabled={loading}
-        className="w-full py-3 sm:py-4 rounded-xl text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group button-ripple"
+        className="w-full py-2.5 sm:py-4 rounded-xl text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group button-ripple"
         style={{
           background: 'linear-gradient(to bottom, rgba(96, 165, 250, 1), #2563eb)',
           boxShadow: 'inset 0px 1px 0px 0px rgba(255, 255, 255, 0.3), 0 10px 25px -5px rgba(59, 130, 246, 0.4)',
@@ -828,7 +828,7 @@ const Registration = () => {
           fontWeight: 700,
         }}
       >
-        <span style={{ fontWeight: 700, fontSize: '15px' }} className="sm:text-[17px]">Continue</span>
+        <span style={{ fontWeight: 700, fontSize: '14px' }} className="sm:text-[17px]">Continue</span>
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
       </button>
     </div>
