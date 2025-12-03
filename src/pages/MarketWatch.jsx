@@ -1744,7 +1744,7 @@ const MarketWatch = () => {
                           {/* Symbol Name with Date (only if short symbol) */}
                           <div className="flex items-center gap-1.5">
                             <span 
-                              className="font-semibold text-white"
+                              className="font-bold text-white"
                               style={{
                                 fontSize: '1rem',
                                 letterSpacing: '-0.01em',
