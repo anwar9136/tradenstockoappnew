@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogIn, UserPlus, TrendingUp, ArrowUp } from 'lucide-react';
+import { LogIn, UserPlus, TrendingUp, ArrowUp, User } from 'lucide-react';
 import logo from '../assets/logo.svg';
 
 const Welcome = () => {
@@ -124,7 +124,7 @@ const Welcome = () => {
             onClick={handleLogin}
             className="backdrop-blur-xl bg-white/5 border border-white/20 text-white font-semibold py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-7 lg:py-3.5 lg:px-8 rounded-full transition-all duration-300 flex items-center justify-center space-x-1.5 sm:space-x-2 md:space-x-2.5 hover:bg-white/10 hover:border-white/40 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] text-xs sm:text-sm md:text-base"
           >
-            <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0" />
+            <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0" />
             <span>Login</span>
           </button>
         </div>

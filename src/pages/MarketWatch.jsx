@@ -1081,7 +1081,7 @@ const MarketWatch = () => {
                   {/* Plus Button - Premium Blue */}
                   <button
                     onClick={handleSearchModalOpen}
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 w-9 h-9 rounded-full transition-all duration-150 flex-shrink-0 flex items-center justify-center active:scale-95"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 w-7 h-7 sm:w-9 sm:h-9 rounded-full transition-all duration-150 flex-shrink-0 flex items-center justify-center active:scale-95"
                     style={{
                       background: '#3B82F6',
                       boxShadow: '0 2px 8px rgba(59, 130, 246, 0.4)',
@@ -1095,7 +1095,7 @@ const MarketWatch = () => {
                       e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
                     }}
                   >
-                    <Plus className="w-5 h-5 text-white" />
+                    <Plus className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </button>
                 </div>
               </div>
@@ -1128,7 +1128,7 @@ const MarketWatch = () => {
                   }
                 }}
                 onClick={() => handleTabChange(tab.id)}
-                className="relative flex-shrink-0 px-7 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold transition-all duration-300 whitespace-nowrap"
+                className="relative flex-shrink-0 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base font-semibold transition-all duration-300 whitespace-nowrap"
                 style={{
                   minWidth: window.innerWidth < 640 ? '130px' : 'auto',
                   fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
@@ -1674,13 +1674,14 @@ const MarketWatch = () => {
             
              {/* Mobile Only: Clean Professional List - Matching Reference Design */}
              <div className="sm:hidden pb-0">
-              {/* Header Row */}
+              {/* Header Row - Sticky */}
               <div 
-                className="flex items-center justify-between"
+                className="flex items-center justify-between sticky top-0 z-20"
                 style={{
                   padding: '12px 12px 12px 14px',
                   borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                  background: 'rgba(15, 23, 42, 0.4)',
+                  background: 'rgba(15, 23, 42, 0.98)',
+                  backdropFilter: 'blur(20px)',
                 }}
               >
                 <div 
@@ -2001,9 +2002,25 @@ const MarketWatch = () => {
 
       {/* Search Modal - Premium Glassmorphism */}
       {showSearchModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
+        <>
+        <style>{`
+          .modal-scrollbar::-webkit-scrollbar {
+            width: 6px;
+          }
+          .modal-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          .modal-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.5);
+            border-radius: 3px;
+          }
+          .modal-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 116, 139, 0.7);
+          }
+        `}</style>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 pb-24 sm:p-6 sm:pb-24">
           <div 
-            className="rounded-2xl p-5 sm:p-6 w-full max-w-lg max-h-[90vh] sm:max-h-[85vh] overflow-hidden flex flex-col shadow-2xl backdrop-blur-[20px] relative"
+            className="rounded-2xl p-4 sm:p-6 w-full max-w-lg max-h-[80vh] sm:max-h-[85vh] flex flex-col shadow-2xl backdrop-blur-[20px] relative"
             style={{
               background: 'rgba(20, 25, 35, 0.6)',
               border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -2101,7 +2118,13 @@ const MarketWatch = () => {
               </div>
             </div>
             
-            <div className="flex-1 overflow-y-auto -mx-2 px-2 relative z-10">
+            <div 
+              className="flex-1 overflow-y-auto -mx-2 px-2 relative z-10 modal-scrollbar"
+              style={{
+                scrollbarWidth: 'thin',
+                scrollbarColor: 'rgba(100, 116, 139, 0.5) transparent',
+              }}
+            >
               {modalLoading ? (
                 renderModalLoader('Loading suggestions', 'Curating the best matches')
               ) : searchLoading ? (
@@ -2251,6 +2274,7 @@ const MarketWatch = () => {
             </div>
           </div>
         </div>
+        </>
       )}
 
       {/* Order Modal */}

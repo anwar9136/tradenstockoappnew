@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { tradingAPI, authAPI } from '../services/api';
 import toast from 'react-hot-toast';
-import upiIcon from '../assets/upi.svg';
+import upiLogos from '../assets/upilogos-removebg-preview (2).png';
 import { fetchAndCacheKYCStatus } from '../utils/kycUtils';
 
 const Profile = () => {
@@ -1332,10 +1332,15 @@ const Profile = () => {
                       window.location.href = depositData.qrCodeUrl;
                     }
                   }}
-                  className="w-full bg-app-blue hover:bg-app-blue-hover text-white py-2.5 px-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-1"
+                  className="w-full py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-between hover:shadow-lg active:scale-[0.98]"
+                  style={{
+                    background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
+                  }}
                 >
-                  <img src={upiIcon} alt="UPI" className="w-[200px] h-6" />
-                  Pay via UPI
+                  <img src={upiLogos} alt="UPI" className="h-10 object-contain" />
+                  <span className="text-white font-semibold text-base">Pay via UPI →</span>
                 </button>
               </>
             ) : (
