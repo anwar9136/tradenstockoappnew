@@ -780,7 +780,7 @@ const Profile = () => {
 
   return (
     <div className="h-screen bg-app-bg text-app-text-primary flex flex-col">
-      <div className="flex-1 overflow-y-auto pb-20">
+      <div className="flex-1 overflow-y-auto pb-28 sm:pb-20">
         {/* Top Header - Sticky */}
         <div className="sticky top-0 z-40 bg-app-surface border-b border-app-border px-4 py-3">
           <div className="flex justify-between items-center">
