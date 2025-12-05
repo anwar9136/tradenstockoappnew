@@ -1487,27 +1487,13 @@ const OrderModal = ({
               <div>
                 <div className="text-gray-400">High</div>
                 <div className="text-white font-medium">
-                  {isFXSymbol() ? (() => {
-                    // Convert INR to USD for FX symbols
-                    const highINR = currentSymbol.high || 0;
-                    const ltpINR = currentSymbol.ltp || 0;
-                    const ltpUSD = currentSymbol.ltpUSD || 0;
-                    const highUSD = (ltpINR > 0 && ltpUSD > 0) ? (highINR * (ltpUSD / ltpINR)) : 0;
-                    return formatFXPrice(highUSD, currentSymbol.ExchangeType, currentSymbol.SymbolName);
-                  })() : `₹${formatPrice(currentSymbol.high || 0)}`}
+                  {isFXSymbol() ? formatFXPrice(currentSymbol.highUSD || 0, currentSymbol.ExchangeType, currentSymbol.SymbolName) : `₹${formatPrice(currentSymbol.high || 0)}`}
                 </div>
               </div>
               <div>
                 <div className="text-gray-400">Low</div>
                 <div className="text-white font-medium">
-                  {isFXSymbol() ? (() => {
-                    // Convert INR to USD for FX symbols
-                    const lowINR = currentSymbol.low || 0;
-                    const ltpINR = currentSymbol.ltp || 0;
-                    const ltpUSD = currentSymbol.ltpUSD || 0;
-                    const lowUSD = (ltpINR > 0 && ltpUSD > 0) ? (lowINR * (ltpUSD / ltpINR)) : 0;
-                    return formatFXPrice(lowUSD, currentSymbol.ExchangeType, currentSymbol.SymbolName);
-                  })() : `₹${formatPrice(currentSymbol.low || 0)}`}
+                  {isFXSymbol() ? formatFXPrice(currentSymbol.lowUSD || 0, currentSymbol.ExchangeType, currentSymbol.SymbolName) : `₹${formatPrice(currentSymbol.low || 0)}`}
                 </div>
               </div>
               {!isFXSymbol() && (

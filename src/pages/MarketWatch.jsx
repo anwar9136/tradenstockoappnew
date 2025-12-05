@@ -326,6 +326,8 @@ const MarketWatch = () => {
                 chgUSD: changeUSD,
                 high: high,
                 low: low,
+                highUSD: highUSD, // Store original USD high value
+                lowUSD: lowUSD, // Store original USD low value
                 open: token.open || 0, // Preserve open price
                 close: token.close || 0, // Preserve close price
                 closeUSD: token.closeUSD || (token.close > 0 && usdToInrRate > 0 ? token.close / usdToInrRate : 0), // Preserve closeUSD
@@ -520,6 +522,58 @@ const MarketWatch = () => {
         
         // IMPORTANT: Initialize chg to 0 to prevent large values on initial load
         // The display will calculate percentage from close price
+        // For FX symbols, the API might return high/low in USD or INR
+        // We need to determine which and store both USD and INR versions
+        let highUSD = parseFloat(token.highUSD || 0);
+        let lowUSD = parseFloat(token.lowUSD || 0);
+        let highINR = parseFloat(token.high || 0);
+        let lowINR = parseFloat(token.low || 0);
+        
+        if (isFXSymbol && usdToInrRate > 0) {
+          // If API provides highUSD/lowUSD directly, use those
+          if (highUSD > 0 || lowUSD > 0) {
+            // Calculate INR from USD if not already set
+            if (highUSD > 0 && highINR === 0) {
+              highINR = highUSD * usdToInrRate;
+            }
+            if (lowUSD > 0 && lowINR === 0) {
+              lowINR = lowUSD * usdToInrRate;
+            }
+          } else if (highINR > 0 || lowINR > 0) {
+            // If API provides high/low but not highUSD/lowUSD, determine currency
+            // Compare with ltpUSD to determine if values are in USD or INR
+            const ltpUSDValue = parseFloat(token.ltpUSD || ltpUSD || 0);
+            
+            if (ltpUSDValue > 0) {
+              // If high/low are close to ltpUSD (within 10x), they're likely in USD
+              // If they're much larger (80-100x), they're likely in INR
+              const highRatio = highINR > 0 ? highINR / ltpUSDValue : 0;
+              const lowRatio = lowINR > 0 ? lowINR / ltpUSDValue : 0;
+              const likelyUSD = (highRatio > 0 && highRatio < 10) || (lowRatio > 0 && lowRatio < 10);
+              
+              if (likelyUSD) {
+                // Values are already in USD
+                highUSD = highINR;
+                lowUSD = lowINR;
+                // Convert to INR
+                highINR = highUSD * usdToInrRate;
+                lowINR = lowUSD * usdToInrRate;
+              } else {
+                // Values are in INR, convert to USD
+                highUSD = highINR / usdToInrRate;
+                lowUSD = lowINR / usdToInrRate;
+              }
+            } else {
+              // No ltpUSD to compare, assume values are in USD for FX symbols
+              highUSD = highINR;
+              lowUSD = lowINR;
+              // Convert to INR
+              highINR = highUSD * usdToInrRate;
+              lowINR = lowUSD * usdToInrRate;
+            }
+          }
+        }
+        
         return {
           SymbolToken: token.SymbolToken?.toString(),
           SymbolName: token.SymbolName,
@@ -527,12 +581,16 @@ const MarketWatch = () => {
           Lotsize: token.Lotsize || token.Lotsize,
           buy: parseFloat(token.buy || 0),
           sell: parseFloat(token.sell || 0),
+          buyUSD: parseFloat(token.buyUSD || 0),
+          sellUSD: parseFloat(token.sellUSD || 0),
           ltp: ltp,
           ltpUSD: ltpUSD,
           chg: 0, // ALWAYS 0 - percentage is calculated in display from close price
           chgUSD: 0, // ALWAYS 0 - percentage is calculated in display from close price
-          high: parseFloat(token.high || 0),
-          low: parseFloat(token.low || 0),
+          high: highINR,
+          low: lowINR,
+          highUSD: highUSD, // Store USD high value
+          lowUSD: lowUSD, // Store USD low value
           open: parseFloat(token.opn || token.open || 0),
           close: close,
           closeUSD: closeUSD,
@@ -1299,9 +1357,9 @@ const MarketWatch = () => {
                 const exchangeType = symbol.ExchangeType || activeTab;
                 const symbolName = symbol.SymbolName || '';
                 const ltpPrice = parseFloat(symbol.ltpUSD || symbol.ltp || 0);
-                const highPrice = parseFloat(symbol.high || 0);
-                const lowPrice = parseFloat(symbol.low || 0);
-                const openPrice = parseFloat(symbol.open || 0);
+                const highPrice = parseFloat(symbol.highUSD || symbol.high || 0); // Use highUSD for FX symbols
+                const lowPrice = parseFloat(symbol.lowUSD || symbol.low || 0); // Use lowUSD for FX symbols
+                const openPrice = parseFloat(symbol.openUSD || symbol.open || 0);
                 const closePrice = parseFloat(symbol.closeUSD || symbol.close || 0);
                 
                 // Calculate change from LTP - Close (actual day change in USD)
@@ -1781,8 +1839,8 @@ const MarketWatch = () => {
                 const symbolName = symbol.SymbolName || '';
                 const bidPrice = parseFloat(symbol.sellUSD || symbol.sell || 0);
                 const askPrice = parseFloat(symbol.buyUSD || symbol.buy || 0);
-                const lowPrice = parseFloat(symbol.low || 0);
-                const highPrice = parseFloat(symbol.high || 0);
+                const lowPrice = parseFloat(symbol.lowUSD || symbol.low || 0); // Use lowUSD for FX symbols
+                const highPrice = parseFloat(symbol.highUSD || symbol.high || 0); // Use highUSD for FX symbols
                 bidDisplay = bidPrice > 0 ? formatFXPrice(bidPrice, exchangeType, symbolName) : '-';
                 askDisplay = askPrice > 0 ? formatFXPrice(askPrice, exchangeType, symbolName) : '-';
                 lowDisplay = lowPrice > 0 ? formatFXPrice(lowPrice, exchangeType, symbolName) : '-';
