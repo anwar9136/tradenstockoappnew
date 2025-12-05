@@ -1524,8 +1524,24 @@ const OrderModal = ({
               {/* Row 4 - Change */}
               <div className="col-span-3">
                 <div className="text-gray-400">Change</div>
-                <div className={`font-medium ${(currentSymbol.chg || 0) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                  {(currentSymbol.chg || 0) >= 0 ? '+' : ''}{isFXSymbol() ? formatFXPrice(currentSymbol.chg || 0, currentSymbol.ExchangeType, currentSymbol.SymbolName) : `₹${formatPrice(currentSymbol.chg || 0)}`}
+                <div className={`font-medium ${(() => {
+                  if (isFXSymbol()) {
+                    const ltpPrice = parseFloat(currentSymbol.ltpUSD || currentSymbol.ltp || 0);
+                    const closePrice = parseFloat(currentSymbol.closeUSD || currentSymbol.close || 0);
+                    const chgPrice = (ltpPrice > 0 && closePrice > 0) ? (ltpPrice - closePrice) : 0;
+                    return chgPrice >= 0 ? 'text-green-400' : 'text-red-400';
+                  }
+                  return (currentSymbol.chg || 0) >= 0 ? 'text-green-400' : 'text-red-400';
+                })()}`}>
+                  {(() => {
+                    if (isFXSymbol()) {
+                      const ltpPrice = parseFloat(currentSymbol.ltpUSD || currentSymbol.ltp || 0);
+                      const closePrice = parseFloat(currentSymbol.closeUSD || currentSymbol.close || 0);
+                      const chgPrice = (ltpPrice > 0 && closePrice > 0) ? (ltpPrice - closePrice) : 0;
+                      return (chgPrice >= 0 ? '+' : '') + formatFXPrice(chgPrice, currentSymbol.ExchangeType, currentSymbol.SymbolName);
+                    }
+                    return ((currentSymbol.chg || 0) >= 0 ? '+' : '') + `₹${formatPrice(currentSymbol.chg || 0)}`;
+                  })()}
                 </div>
               </div>
             </div>

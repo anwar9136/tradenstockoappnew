@@ -1797,7 +1797,8 @@ const MarketWatch = () => {
                 const storedCloseUSD = parseFloat(symbol.closeUSD || 0);
                 const closeUSD = storedCloseUSD > 0 ? storedCloseUSD : (closeINR > 0 && usdToInrRate > 0 ? closeINR / usdToInrRate : 0);
                 ltpValue = ltpUSD;
-                changeValue = parseFloat(symbol.chgUSD || symbol.chg || 0);
+                // Calculate day's change: LTP - Close (in USD)
+                changeValue = (ltpUSD > 0 && closeUSD > 0) ? (ltpUSD - closeUSD) : 0;
                 
                 if (closeUSD > 0 && ltpUSD > 0) {
                   const pct = ((ltpUSD - closeUSD) / closeUSD) * 100;
@@ -1857,9 +1858,15 @@ const MarketWatch = () => {
               }
               
               // Format change display with sign
-              const changeDisplay = changeValue !== 0 
-                ? (changeValue > 0 ? '+' : '') + Math.abs(changeValue).toFixed(0)
-                : '0';
+              const changeDisplay = (() => {
+                if (changeValue === 0) return '0';
+                if (isFXTab) {
+                  const exchangeType = symbol.ExchangeType || activeTab;
+                  const symbolName = symbol.SymbolName || '';
+                  return (changeValue > 0 ? '+' : '') + formatFXPrice(changeValue, exchangeType, symbolName);
+                }
+                return (changeValue > 0 ? '+' : '') + Math.abs(changeValue).toFixed(0);
+              })();
               
               return (
                 <div
