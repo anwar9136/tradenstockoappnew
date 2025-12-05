@@ -173,9 +173,23 @@ const Registration = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    
+    // Filter input based on field type
+    let filteredValue = value;
+    
+    // Username: Only allow letters and numbers (no special characters)
+    if (name === 'username') {
+      filteredValue = value.replace(/[^a-zA-Z0-9]/g, '');
+    }
+    
+    // First Name and Last Name: Only allow letters and spaces (no special characters or numbers)
+    if (name === 'firstName' || name === 'lastName') {
+      filteredValue = value.replace(/[^a-zA-Z\s]/g, '');
+    }
+    
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: filteredValue
     }));
   };
 
@@ -201,8 +215,13 @@ const Registration = () => {
   };
 
   const validateName = (name) => {
-    const regex = /^[A-Za-z\s-'.]+$/;
+    const regex = /^[A-Za-z\s]+$/;
     return regex.test(name) && name.trim() !== "";
+  };
+
+  const validateUsername = (username) => {
+    const regex = /^[a-zA-Z0-9]+$/;
+    return regex.test(username) && username.trim() !== "";
   };
 
   // Send OTP
@@ -297,15 +316,19 @@ const Registration = () => {
   // Validate Part 1 (Basic Info)
   const validatePart1 = () => {
     if (!validateName(formData.firstName)) {
-      toast.error('Please enter a valid first name');
+      toast.error('Please enter a valid first name (letters only)');
       return false;
     }
     if (!validateName(formData.lastName)) {
-      toast.error('Please enter a valid last name');
+      toast.error('Please enter a valid last name (letters only)');
       return false;
     }
     if (!formData.username || formData.username.trim() === '') {
       toast.error('Please enter a username');
+      return false;
+    }
+    if (!validateUsername(formData.username)) {
+      toast.error('Username can only contain letters and numbers');
       return false;
     }
     if (!formData.password || formData.password.length < 6) {
