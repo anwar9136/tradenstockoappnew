@@ -50,7 +50,6 @@ const Profile = () => {
   const [kycImages, setKycImages] = useState({ aadhaar: null, pan: null });
   const [uploadMessage, setUploadMessage] = useState('');
   const [kycLoading, setKycLoading] = useState(false);
-  const [showKycIncompleteAlert, setShowKycIncompleteAlert] = useState(false);
   const [usdToInrRate, setUsdToInrRate] = useState(88.65); // Default fallback rate
   const [bankDetails, setBankDetails] = useState({
     accountHolderName: '',
@@ -512,7 +511,16 @@ const Profile = () => {
       toast.error('Please fill all fields');
       return;
     }
-    
+
+    // Check if KYC is complete before allowing withdrawal
+    if (!kycData || !kycData.aadhaar_image || !kycData.pan_image) {
+      toast.error('Please complete your KYC before requesting withdrawal');
+      setShowWithdrawModal(false); // Close withdraw modal
+      setShowKYCModal(true); // Open KYC modal
+      fetchKYCStatus(); // Refresh KYC status
+      return;
+    }
+
     try {
       await tradingAPI.saveTransaction({
         userid: user.UserId,
@@ -521,7 +529,7 @@ const Profile = () => {
         txttransremark: withdrawData.remark,
         refid: user.Refid
       });
-      
+
       toast.success('Withdrawal request submitted');
       setShowWithdrawModal(false);
       setWithdrawData({ amount: '', remark: '' });
@@ -539,31 +547,18 @@ const Profile = () => {
       const response = await fetch(`https://tnsadmin.twmresearchalert.com/api/get_kyc.php?user_id=${user.UserId}`);
       const data = await response.json();
       
-      // Check for KYC incomplete condition
-      if (data.status === 'success' && 
-          Array.isArray(data.data) && 
-          data.data.length === 0 && 
-          data.pagination && 
-          data.pagination.total_records === '0') {
-        setShowKycIncompleteAlert(true);
-        setKycData(null);
+      // Check if KYC is complete
+      if (data.status === 'success' && data.data && data.data.length > 0 && data.data[0].aadhaar_image && data.data[0].pan_image) {
+        setKycData(data.data[0]);
         // Update cache
         await fetchAndCacheKYCStatus(user.UserId);
       } else {
-        setShowKycIncompleteAlert(false);
-        if (data.status === 'success' && data.data && data.data.length > 0 && data.data[0].aadhaar_image && data.data[0].pan_image) {
-          setKycData(data.data[0]);
-          // Update cache
-          await fetchAndCacheKYCStatus(user.UserId);
-        } else {
-          setKycData(null);
-          // Update cache
-          await fetchAndCacheKYCStatus(user.UserId);
-        }
+        setKycData(null);
+        // Update cache
+        await fetchAndCacheKYCStatus(user.UserId);
       }
     } catch (error) {
       setKycData(null);
-      setShowKycIncompleteAlert(false);
     } finally {
       setKycLoading(false);
     }
@@ -789,12 +784,6 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* KYC Incomplete Alert */}
-        {showKycIncompleteAlert && (
-          <div className="bg-app-red text-white px-2 py-1 text-center font-medium text-xs sticky top-[52px] z-40">
-            Please complete your kyc
-          </div>
-        )}
 
         <div className="max-w-lg mx-auto px-4 py-3">
         {/* User Info Card */}
