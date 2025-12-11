@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { X, TrendingUp, TrendingDown, Clock, AlertCircle } from 'lucide-react';
 import { tradingAPI } from '../services/api';
 import ChartModal from './ChartModal';
-import { getCachedKYCStatus, fetchAndCacheKYCStatus } from '../utils/kycUtils';
 
 const OrderModal = ({ 
   isOpen, 
@@ -31,7 +30,6 @@ const OrderModal = ({
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [lotSizeError, setLotSizeError] = useState('');
-  const [kycStatus, setKycStatus] = useState(null); // null = loading, true = completed, false = incomplete
   const [usdToInrRate, setUsdToInrRate] = useState(88.65);
   const [liveSymbol, setLiveSymbol] = useState(symbol); // Local state for live price updates
   const [isChartModalOpen, setIsChartModalOpen] = useState(false);
@@ -51,30 +49,6 @@ const OrderModal = ({
     setLotSizeError('');
   }, [symbol]);
 
-  // Get KYC status from cache when modal opens (fast, non-blocking)
-  useEffect(() => {
-    if (!isOpen || !user?.UserId) {
-      setKycStatus(null);
-      return;
-    }
-
-    // First, try to get from cache (instant)
-    const cachedStatus = getCachedKYCStatus(user.UserId);
-    if (cachedStatus !== null) {
-      setKycStatus(cachedStatus);
-    } else {
-      // If not cached, fetch and cache it (non-blocking)
-      fetchAndCacheKYCStatus(user.UserId).then(status => {
-        if (status !== null) {
-          setKycStatus(status);
-        }
-        // If fetch fails, allow orders to proceed (optimistic)
-      }).catch(error => {
-        console.log('KYC status fetch error - allowing orders to proceed');
-        // Don't block orders on error
-      });
-    }
-  }, [isOpen, user?.UserId]);
 
   // Fetch USD to INR exchange rate
   useEffect(() => {
@@ -287,15 +261,6 @@ const OrderModal = ({
       return false;
     }
 
-    // Check KYC status before validating order
-    // Only block if we know for certain KYC is incomplete
-    // Allow validation to proceed if KYC status is still loading (optimistic approach)
-    if (kycStatus === false) {
-      setError('Please complete your KYC verification before placing orders. Go to Profile > KYC to submit your documents.');
-      return false;
-    }
-    // If KYC status is null (still loading), allow validation to proceed
-    // The backend will validate KYC status anyway
 
     // Check if lot size has validation error
     if (lotSizeError) {
@@ -679,17 +644,6 @@ const OrderModal = ({
       return;
     }
 
-    // Check KYC status before placing order
-    // Only block if we know for certain KYC is incomplete
-    // Allow orders to proceed if KYC status is still loading (optimistic approach)
-    if (kycStatus === false) {
-      setError('Please complete your KYC verification before placing orders. Go to Profile > KYC to submit your documents.');
-      setOrderLoading(false);
-      setPlacingOrderType(null);
-      return;
-    }
-    // If KYC status is null (still loading), allow order to proceed
-    // The backend will validate KYC status anyway
 
     // Check if lot size has validation error (prevent order placement)
     if (lotSizeError) {
