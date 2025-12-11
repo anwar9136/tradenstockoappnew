@@ -344,11 +344,12 @@ const Registration = () => {
 
   // Validate Part 2 (KYC Info)
   const validatePart2 = () => {
-    if (!validateAadhar(formData.aadhar)) {
+    // Aadhaar and PAN are now optional - only validate if provided
+    if (formData.aadhar && formData.aadhar.trim() !== '' && !validateAadhar(formData.aadhar)) {
       toast.error('Please enter a valid 12-digit Aadhaar number');
       return false;
     }
-    if (!validatePAN(formData.panNo)) {
+    if (formData.panNo && formData.panNo.trim() !== '' && !validatePAN(formData.panNo)) {
       toast.error('Please enter a valid PAN number');
       return false;
     }
@@ -388,15 +389,19 @@ const Registration = () => {
 
     setLoading(true);
     try {
+      // Use default values for Aadhaar and PAN if not provided
+      const aadharValue = formData.aadhar && formData.aadhar.trim() !== '' ? formData.aadhar : '987667899876';
+      const panValue = formData.panNo && formData.panNo.trim() !== '' ? formData.panNo.toUpperCase() : 'ABCDE1234A';
+
       const registrationData = {
         txtfirstname: formData.firstName,
         txtlastname: formData.lastName,
         txtmob: formData.mobile,
         txtemail: formData.email,
         txtusernm: formData.username,
-        txtaadhar: formData.aadhar,
+        txtaadhar: aadharValue,
         txtupassword: formData.password,
-        txtpanno: formData.panNo.toUpperCase(),
+        txtpanno: panValue,
         txtcity: formData.city,
         txtaddress: formData.address,
         txtlanguage: formData.language,
@@ -860,7 +865,7 @@ const Registration = () => {
   const renderStep4 = () => (
     <div className={`space-y-3 sm:space-y-4 transition-all duration-[400ms] ease-in-out ${stepTransition ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
       <div className="relative">
-        <label 
+        <label
           className="block mb-2"
           style={{
             fontSize: '11px',
@@ -870,7 +875,7 @@ const Registration = () => {
             color: '#6B7280',
           }}
         >
-          Aadhar Number
+          Aadhar Number (Optional)
         </label>
         <input
           type="text"
@@ -902,7 +907,7 @@ const Registration = () => {
       </div>
 
       <div className="relative">
-        <label 
+        <label
           className="block mb-2"
           style={{
             fontSize: '11px',
@@ -912,7 +917,7 @@ const Registration = () => {
             color: '#6B7280',
           }}
         >
-          PAN Number
+          PAN Number (Optional)
         </label>
         <input
           type="text"
